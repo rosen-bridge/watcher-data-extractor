@@ -9,13 +9,15 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
     private readonly dataSource: DataSource;
     private readonly actions: EventTriggerDB;
     private readonly eventTriggerErgoTree: string;
+    private readonly RWT: string;
 
-    constructor(id: string, dataSource: DataSource, address: string) {
+    constructor(id: string, dataSource: DataSource, address: string, RWT: string) {
         super();
         this.id = id;
         this.dataSource = dataSource;
         this.actions = new EventTriggerDB(dataSource);
         this.eventTriggerErgoTree = wasm.Address.from_base58(address).to_ergo_tree().to_base16_bytes();
+        this.RWT = RWT
     }
 
     getId = () => this.id;
@@ -33,8 +35,13 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                 txs.forEach(transaction => {
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index);
-                        //TODO:conditions should completed
-                        if (output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
+
+                        if (output.tokens().len() > 0 &&
+                            output.tokens().get(0).id().to_str() == this.RWT &&
+                            output.register_value(4) &&
+                            output.register_value(4)!.to_coll_coll_byte() &&
+                            output.register_value(4)!.to_coll_coll_byte().length >= 1 &&
+                            output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
                             boxes.push({
                                 boxId: output.box_id().to_str(),
                                 boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64")
