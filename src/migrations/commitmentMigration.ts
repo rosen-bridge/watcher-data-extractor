@@ -8,12 +8,12 @@ export class commitmentMigration1659787165000 implements MigrationInterface{
             `CREATE TABLE "commitment_entity" 
                     ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, 
                     "extractor" varchar NOT NULL, 
-                    "event_id" varchar NOT NULL, 
+                    "eventId" varchar NOT NULL, 
                     "commitment" varchar NOT NULL, 
                     "WID" varchar NOT NULL, 
-                    "commitment_box_id" varchar NOT NULL, 
+                    "commitmentBoxId" varchar NOT NULL, 
                     "block" varchar NOT NULL, 
-                    "spend_block" varchar NOT NULL
+                    "spendBlock" varchar
                 )`
         );
     }

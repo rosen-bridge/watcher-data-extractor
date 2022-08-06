@@ -27,6 +27,7 @@ export class CommitmentEntityAction{
             row.block = block.hash;
             return row;
         });
+        console.log(commitments)
         const queryRunner = this.datasource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();

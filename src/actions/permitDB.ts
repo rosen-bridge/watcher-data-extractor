@@ -3,7 +3,7 @@ import { extractedBox } from "../interfaces/extractedBox";
 import { PermitEntity } from "../entities/PermitEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
 
-export class PermitEntityAction {
+export class PermitEntityAction{
     private readonly datasource: DataSource;
 
     constructor(dataSource: DataSource) {
@@ -15,12 +15,13 @@ export class PermitEntityAction {
      * @param permits
      * @param block
      */
-    storeBoxes = async (permits: Array<extractedBox>, block: BlockEntity) => {
+    storeBoxes = async (permits: Array<extractedBox>, block: BlockEntity, extractor: string) => {
         const permitEntity = permits.map((box) => {
             const row = new PermitEntity();
             row.boxId = box.boxId;
             row.boxSerialized = box.boxSerialized;
             row.block = block.hash;
+            row.extractor = extractor;
             return row;
         });
         let success = true;

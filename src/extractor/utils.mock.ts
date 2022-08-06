@@ -267,6 +267,7 @@ export const loadDataBase = async (name: string): Promise<DataSource> => {
 
 export const permitAddress = "EE7687i4URb4YuSGSQXPCbAjMfN4dUt5Qx8BqKZJiZhDY8fdnSUwcAGqAsqfn1tW1byXB8nDrgkFzkAFgaaempKxfcPtDzAbnu9QfknzmtfnLYHdxPPg7Qtjy7jK5yUpPQ2M4Ps3h5kH57xWDJxcKviEMY11rQnxATjTKTQgGtfzsAPpqsUyT2ZpVYsFzUGJ4nSj4WaDZSU1Hovv6dPkSTArLQSjp38wE72ae6hbNJwXGkqgfBtdVXcZVtnqevw9xUNcE6i942CQ9hVMfbdRobnsaLgsDLQomsh8jLMXqkMde5qH2vGBUqnLKgjxCZaa7vStpPXT5EuzLn9napGwUcbJjgRk69FsRSfCrcydZbYxw4Gnh6ZB9at2USpwL1HdVkHVh8M6Kbw6ppRfeG4JeFsUw33H4sSRk6UPqfuFcRUf7Cec2vmPezXTPT7CXQqEeCjxmWXqfyEQUfnCwpiH5fQ9A8CQ3jTyFhxBTpoGDdtiVCmhqhKxjh9M7gcjpr1dUjGMCWxjir94ejfq24XQrSscrZuUT5NVHTWAkzQ"
 export const RWTId = "3c6cb596273a737c3e111c31d3ec868b84676b7bad82f9888ad574b44edef267"
+export const commitmentAddress = "58grLgCGkazxJRdoVa73dDS2cFC2ZmfzWL3ibDeHPtcoXmWd72jjvjXX59Yi8S7MyLHGiWi44eRreMy1tz23AndoJVQMSatGFZnMzax3x4Xi8rJNsaKGSREEq4oY8gHJ53UtH7yW3D32HoFEkwrXNGCfzHCZ58jSuDzGxfmzWoLSFRqBAE7DFDjq1Ro6jVpJkQjNXwzKCPaSY2mLvFb9RSPLRSzMEW4A9Gjhr9MGnPaHD7L1WAk7c851Q66A3wKtFNzwts4cju48CEMMYZN3MzyzVeEAgsbnggNHA4RbQD2vDEZRNuYwruD9SWeJ337BsWnpJaXedkqu3sQREnA93U1Q2yeW2QRE3z77K7tiVjWziekFZW3Bbvy3MPURAAJpY1N3gEzhV3WLS48XZqYAVTRDBsXKWk1r5bNorRJUaXWSEvwRJNbJLsbhQD5WrZsVvkPXtjM1NG8Uyv96CSohKcuitgfpYrnvdGwyGyS2wRAf6UNveP73sJEpBFvEcFNJWmFkWwvEj9EAihGXcygTpkW5bNuEjt3jPwbavjtiRf74xD1z27FuT3bBdFF4hAr3tycJi4jzLHDMroQfaYMauwSWLrRCRq9w4HgaRAh8HeqYH1TVwi85dVrnmJCzzCPwycTk5ApgpoJLzarNMq5FSws9E6PXhTuNihgoTLQmehV2dSPLF8ATLFDxR1vaT8is3zGgs6Qg1ZfFmhe9poxvt2FjwYmnxTNMn5pgGCGf2eob8Ax1FfHLzh678kSxhGgxCa4bJeTfvZwPuXUBLrfAEbyR69XDSWruzxQffu6csRkCUEo49zTvU1YQZfLifXGo2RrZnihp545b3QuZL";
 export const block: BlockEntity = {
     height: 10,
     hash: "hash",
@@ -335,3 +336,88 @@ export const permitTxGenerator = (
     return wallet.sign_transaction(ctx, tx, unspentBoxes, wasm.ErgoBoxes.from_boxes_json([]))
 
 }
+
+export const commitmentTxGenerator = (
+    hasToken = true,
+    WID: Array<string>,
+    requestId: Array<string>,
+    eventDigest: string,
+) => {
+    const sk = wasm.SecretKey.random_dlog();
+    const commitmentAddressContract = wasm.Contract.pay_to_address(wasm.Address.from_base58(commitmentAddress));
+    const address = wasm.Contract.pay_to_address(sk.get_address());
+    const outBoxValue = wasm.BoxValue.from_i64(wasm.I64.from_str("100000000"));
+    const outBoxBuilder = new wasm.ErgoBoxCandidateBuilder(
+        outBoxValue,
+        commitmentAddressContract,
+        0,
+    );
+
+    if (hasToken) {
+        outBoxBuilder.add_token(
+            wasm.TokenId.from_str(RWTId),
+            wasm.TokenAmount.from_i64(wasm.I64.from_str("10")),
+        );
+    }
+
+    const R4Value = WID.map((val) => {
+        return new Uint8Array(Buffer.from(val))
+    });
+    outBoxBuilder.set_register_value(4, wasm.Constant.from_coll_coll_byte(
+        R4Value
+    ));
+
+    const R5Value = requestId.map((val) => {
+        return new Uint8Array(Buffer.from(val))
+    });
+    outBoxBuilder.set_register_value(5, wasm.Constant.from_coll_coll_byte(
+        R5Value
+    ));
+
+    outBoxBuilder.set_register_value(6, wasm.Constant.from_byte_array(
+        new Uint8Array(Buffer.from(eventDigest))
+    ));
+
+
+    const outBox = outBoxBuilder.build();
+    const tokens = new wasm.Tokens();
+    tokens.add(
+        new wasm.Token(
+            wasm.TokenId.from_str(RWTId),
+            wasm.TokenAmount.from_i64(wasm.I64.from_str("10"))
+        )
+    );
+
+    const inputBox = new wasm.ErgoBox(
+        wasm.BoxValue.from_i64(wasm.I64.from_str('1100000000')),
+        0,
+        address,
+        wasm.TxId.zero(),
+        0,
+        tokens
+    );
+    const unspentBoxes = new wasm.ErgoBoxes(inputBox);
+    const txOutputs = new wasm.ErgoBoxCandidates(outBox);
+    const fee = wasm.TxBuilder.SUGGESTED_TX_FEE();
+    const boxSelector = new wasm.SimpleBoxSelector();
+    const targetBalance = wasm.BoxValue.from_i64(outBoxValue.as_i64().checked_add(fee.as_i64()));
+    const boxSelection = boxSelector.select(unspentBoxes, targetBalance, tokens);
+    const tx = wasm.TxBuilder.new(
+        boxSelection,
+        txOutputs,
+        0,
+        fee,
+        sk.get_address(),
+        wasm.BoxValue.SAFE_USER_MIN()
+    ).build();
+    const blockHeaders = wasm.BlockHeaders.from_json(last10BlockHeader);
+    const preHeader = wasm.PreHeader.from_block_header(blockHeaders.get(0));
+    const ctx = new wasm.ErgoStateContext(preHeader, blockHeaders);
+    const sks = new wasm.SecretKeys();
+    sks.add(sk);
+    const wallet = wasm.Wallet.from_secrets(sks);
+    return wallet.sign_transaction(ctx, tx, unspentBoxes, wasm.ErgoBoxes.from_boxes_json([]))
+
+}
+
+

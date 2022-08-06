@@ -37,12 +37,16 @@ export class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
                 const spendIds: Array<string> = [];
                 txs.forEach(transaction => {
                     // process outputs
+                    if(transaction.outputs().len()<2){}
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index)
                         if (this.commitmentsErgoTrees.indexOf(output.ergo_tree().to_base16_bytes()) === -1) {
+                            console.log("######")
+
                             return
                         }
                         if (output.tokens().len() > 0 && output.tokens().get(0).id().to_str() === this.RWTId) {
+                            console.log("*********")
                             const R4 = output.register_value(4);
                             const R5 = output.register_value(5);
                             const R6 = output.register_value(6);
