@@ -23,7 +23,7 @@ export class PermitEntityAction {
             row.block = block.hash;
             return row;
         });
-        let error = true;
+        let success = true;
         const queryRunner = this.datasource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -32,11 +32,11 @@ export class PermitEntityAction {
             await queryRunner.commitTransaction();
         } catch (e) {
             await queryRunner.rollbackTransaction();
-            error = false;
+            success = false;
         } finally {
             await queryRunner.release();
         }
-        return error;
+        return success;
     }
 
     deleteBlock = async (block: string, extractor: string) => {

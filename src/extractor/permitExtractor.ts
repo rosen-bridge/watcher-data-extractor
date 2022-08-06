@@ -17,7 +17,7 @@ export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
         this.dataSource = dataSource;
         this.actions = new PermitEntityAction(dataSource);
         this.permitErgoTree = wasm.Address.from_base58(address).to_ergo_tree().to_base16_bytes();
-        this.RWT = RWT
+        this.RWT = RWT;
     }
 
     getId = () => this.id;
@@ -35,7 +35,6 @@ export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                 txs.forEach(transaction => {
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index);
-
                         if (output.tokens().len() > 0 &&
                             output.tokens().get(0).id().to_str() == this.RWT &&
                             output.ergo_tree().to_base16_bytes() === this.permitErgoTree) {
