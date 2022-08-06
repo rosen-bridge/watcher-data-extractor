@@ -4,7 +4,7 @@ import { PermitEntityAction } from "../actions/permitDB";
 import { extractedBox } from "../interfaces/extractedBox";
 import { AbstractExtractor, BlockEntity } from "@rosen-bridge/scanner";
 
-export class ExtractorPermit extends AbstractExtractor<wasm.Transaction>{
+export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
     id: string;
     private readonly dataSource: DataSource;
     private readonly actions: PermitEntityAction;

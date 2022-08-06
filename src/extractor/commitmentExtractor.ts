@@ -4,7 +4,7 @@ import { DataSource } from "typeorm";
 import { CommitmentEntityAction } from "../actions/commitmentDB";
 import { AbstractExtractor, BlockEntity } from "@rosen-bridge/scanner";
 
-export class ExtractorCommitment extends AbstractExtractor<wasm.Transaction>{
+export class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
     id: string;
     private readonly dataSource: DataSource;
     private readonly commitmentsErgoTrees: Array<string>;
