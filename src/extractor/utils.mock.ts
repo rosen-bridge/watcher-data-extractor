@@ -491,4 +491,3 @@ export const eventTriggerTxGenerator = (
 
 }
 
-
