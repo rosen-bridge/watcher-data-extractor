@@ -16,7 +16,7 @@ export class CommitmentEntityAction{
      * @param block
      * @param extractorId
      */
-    storeCommitments = async (commitments: Array<extractedCommitment>, block: BlockEntity, extractorId: string) => {
+    storeCommitments = async (commitments: Array<extractedCommitment>, block: BlockEntity, extractorId: string): Promise<boolean> => {
         const commitmentEntity = commitments.map((commitment) => {
             const row = new CommitmentEntity();
             row.commitment = commitment.commitment;
@@ -27,7 +27,7 @@ export class CommitmentEntityAction{
             row.block = block.hash;
             return row;
         });
-        console.log(commitments)
+        let success = true;
         const queryRunner = this.datasource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -35,24 +35,22 @@ export class CommitmentEntityAction{
             await queryRunner.manager.save(commitmentEntity);
             await queryRunner.commitTransaction();
         } catch (e) {
+            success = false;
             await queryRunner.rollbackTransaction();
+        } finally {
             await queryRunner.release();
-            throw e;
         }
+        return success;
     }
 
-    spendCommitments = async (spendId: Array<string>, block: BlockEntity) => {
+    spendCommitments = async (spendId: Array<string>, block: BlockEntity): Promise<void> => {
         //todo: should change with single db call
-        try {
-            for (const id of spendId) {
-                await this.datasource.createQueryBuilder()
-                    .update(CommitmentEntity)
-                    .set({spendBlock: block.hash})
-                    .where("commitmentBoxId = :id", {id: spendId})
-                    .execute()
-            }
-        } catch (e) {
-            throw e
+        for (const id of spendId) {
+            await this.datasource.createQueryBuilder()
+                .update(CommitmentEntity)
+                .set({spendBlock: block.hash})
+                .where("commitmentBoxId = :id", {id: spendId})
+                .execute()
         }
     }
 

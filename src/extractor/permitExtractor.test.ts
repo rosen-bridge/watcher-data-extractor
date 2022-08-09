@@ -13,7 +13,7 @@ describe('permitExtractor', () => {
         })
     })
     describe("processTransactions", () => {
-        it("", async () => {
+        it("should save 3 permits", async () => {
             const dataSource = await loadDataBase("permit-1");
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const tx1 = permitTxGenerator();
@@ -26,7 +26,7 @@ describe('permitExtractor', () => {
             expect(rowsCount).toBe(3);
         })
 
-        it("", async () => {
+        it("should save 2 permits out of 3 transaction",async () => {
             const dataSource = await loadDataBase("permit-2");
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const tx1 = permitTxGenerator();
@@ -41,7 +41,7 @@ describe('permitExtractor', () => {
 
     })
     describe("forkBlock", () => {
-        it("", async () => {
+        it("should remove only block with specific block id and extractor id", async () => {
             const dataSource = await loadDataBase("permit-1");
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const tx1 = permitTxGenerator();
@@ -56,8 +56,3 @@ describe('permitExtractor', () => {
     })
 
 })
-
-
-
-
-

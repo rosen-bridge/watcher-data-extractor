@@ -50,7 +50,7 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
 
                     }
                 });
-                this.actions.storeBoxes(boxes, block).then(() => {
+                this.actions.storeBoxes(boxes, block, this.getId()).then(() => {
                     resolve(true)
                 }).catch((e) => {
                     console.log(e);

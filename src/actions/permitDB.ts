@@ -40,7 +40,8 @@ export class PermitEntityAction{
         return success;
     }
 
-    deleteBlock = async (block: string, extractor: string) => {
+    //TODO: should check if deleted or not Promise<Boolean>
+    deleteBlock = async (block: string, extractor: string): Promise<void> => {
         await this.datasource.createQueryBuilder()
             .delete()
             .from(PermitEntity)
@@ -49,5 +50,4 @@ export class PermitEntityAction{
                 "extractor": extractor
             }).execute()
     }
-
 }

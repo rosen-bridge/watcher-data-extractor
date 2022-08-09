@@ -8,8 +8,8 @@ export class eventTriggerMigration1659787067000 implements MigrationInterface{
             `CREATE TABLE "event_trigger_entity" 
                     ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, 
                     "extractor" varchar NOT NULL, 
-                    "box_id" varchar NOT NULL, 
-                    "box_serialized" varchar NOT NULL, 
+                    "boxId" varchar NOT NULL, 
+                    "boxSerialized" varchar NOT NULL, 
                     "block" varchar NOT NULL
                 )`
         );
