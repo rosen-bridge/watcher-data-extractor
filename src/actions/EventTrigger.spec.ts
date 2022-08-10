@@ -1,4 +1,4 @@
-import { loadDataBase } from "../extractor/utilsFunctions.mock";
+import { clearDB, loadDataBase } from "../extractor/utilsFunctions.mock";
 import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import { EventTriggerDB } from "./EventTriggerDB";
 import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
@@ -34,6 +34,7 @@ const sampleBox2: ExtractedEventTrigger = {
 
 }
 
+const dataSourcePromise = loadDataBase();
 
 describe("EventTrigger", () => {
     describe("storeBoxes", () => {
@@ -45,13 +46,14 @@ describe("EventTrigger", () => {
          * Expected: storeBoxes should returns true and database row count should be 2
          */
         it('gets two EventBoxes and dataBase row should be 2', async () => {
-            const dataSource = await loadDataBase("EventTrigger-storeBoxes");
+            const dataSource = await dataSourcePromise;
             const eventTrigger = new EventTriggerDB(dataSource);
             const res = await eventTrigger.storeEventTriggers([sampleBox1, sampleBox2], block, 'extractor1');
             expect(res).toBe(true);
             const repository = dataSource.getRepository(EventTriggerEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
+            await clearDB(dataSource);
         })
     })
 
@@ -64,7 +66,7 @@ describe("EventTrigger", () => {
          * Expected: deleteBlock should call without no error and database row count should be 1
          */
         it('should deleted one row of the dataBase correspond to one block', async () => {
-            const dataSource = await loadDataBase("EventTrigger-deleteBlock");
+            const dataSource = await dataSourcePromise;
             const eventTrigger = new EventTriggerDB(dataSource);
             await eventTrigger.storeEventTriggers([sampleBox1], block, 'extractor1');
             await eventTrigger.storeEventTriggers([sampleBox2], {...block, hash: 'hash2'}, 'extractor2');
@@ -74,6 +76,8 @@ describe("EventTrigger", () => {
             await eventTrigger.deleteBlock('hash', 'extractor1');
             [_, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(1);
+            await dataSource.getRepository(EventTriggerEntity).createQueryBuilder().softDelete();
+            await clearDB(dataSource);
         })
     })
 })

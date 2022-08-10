@@ -1,4 +1,4 @@
-import { loadDataBase } from "../extractor/utilsFunctions.mock";
+import { clearDB, loadDataBase } from "../extractor/utilsFunctions.mock";
 import { CommitmentEntityAction } from "./commitmentDB";
 import { CommitmentEntity } from "../entities/CommitmentEntity";
 import { block } from "../extractor/utilsVariable.mock";
@@ -17,6 +17,8 @@ const commitment2 = {
     commitmentBoxId: "boxId2",
 }
 
+const dataSourcePromise = loadDataBase();
+
 describe('commitmentEntityAction', () => {
     describe('storeCommitments', () => {
 
@@ -27,13 +29,14 @@ describe('commitmentEntityAction', () => {
          * Expected: storeCommitments should returns true and database row count should be 2
          */
         it('gets two commitments and dataBase row should be 2', async () => {
-            const dataSource = await loadDataBase("commitmentEntity-storeBoxes");
+            const dataSource = await dataSourcePromise;
             const commitmentEntity = new CommitmentEntityAction(dataSource);
             const res = await commitmentEntity.storeCommitments([commitment1, commitment2], block, 'extractor1');
             expect(res).toBe(true);
             const repository = dataSource.getRepository(CommitmentEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
+            await clearDB(dataSource);
         })
     })
 
@@ -45,7 +48,7 @@ describe('commitmentEntityAction', () => {
      */
     describe('spendCommitments', () => {
         it('sets one spendBlock for one commitments & one row should have spendBlock', async () => {
-            const dataSource = await loadDataBase("commitmentEntity-spendCommitment");
+            const dataSource = await dataSourcePromise;
             const commitmentEntity = new CommitmentEntityAction(dataSource);
             const res = await commitmentEntity.storeCommitments([commitment1, commitment2], block, 'extractor1');
             expect(res).toBe(true);
@@ -53,6 +56,7 @@ describe('commitmentEntityAction', () => {
             expect((await repository.findBy({spendBlock: 'hash'})).length).toBe(0);
             await commitmentEntity.spendCommitments(['boxId2'], block);
             expect((await repository.findBy({spendBlock: 'hash'})).length).toBe(1);
+            await clearDB(dataSource);
         })
     })
 
@@ -65,7 +69,7 @@ describe('commitmentEntityAction', () => {
          * Expected: deleteBlock should call without no error and database row count should be 1
          */
         it('should deleted one row of the dataBase correspond to one block', async () => {
-            const dataSource = await loadDataBase("commitmentEntity-deleteBlockCommitment");
+            const dataSource = await dataSourcePromise;
             const commitmentEntity = new CommitmentEntityAction(dataSource);
             await commitmentEntity.storeCommitments([commitment1], block, 'extractor1');
             await commitmentEntity.storeCommitments([commitment2], {...block, hash: 'hash2'}, 'extractor1');
@@ -75,6 +79,7 @@ describe('commitmentEntityAction', () => {
             await commitmentEntity.deleteBlockCommitment('hash', 'extractor1');
             [_, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(1);
+            await clearDB(dataSource);
         })
     })
 

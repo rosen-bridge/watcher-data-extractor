@@ -6,7 +6,7 @@ import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import * as wasm from "ergo-lib-wasm-nodejs";
 import { commitmentAddress, eventTriggerAddress, last10BlockHeader, permitAddress, RWTId } from "./utilsVariable.mock";
 
-export const loadDataBase = async (name: string): Promise<DataSource> => {
+export const loadDataBase = async (name = "rosen-extractor"): Promise<DataSource> => {
     const dataSource = new DataSource({
         type: "sqlite",
         database: `./sqlite/${name}-test.sqlite`,
@@ -18,6 +18,15 @@ export const loadDataBase = async (name: string): Promise<DataSource> => {
     await dataSource.initialize();
     await dataSource.runMigrations();
     return dataSource;
+}
+
+export async function clearDB(dataSource: DataSource) {
+    const entities = dataSource.entityMetadatas;
+    for (const entity of entities) {
+        const repository = await dataSource.getRepository(entity.name);
+        await repository.query(`DELETE FROM ${entity.tableName};`);
+        await repository.query(`DELETE FROM SQLITE_SEQUENCE WHERE name='${entity.tableName}';`);
+    }
 }
 
 export const permitTxGenerator = (

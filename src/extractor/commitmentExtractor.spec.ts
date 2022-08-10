@@ -1,4 +1,5 @@
 import {
+    clearDB,
     commitmentTxGenerator,
     loadDataBase,
 } from "./utilsFunctions.mock";
@@ -6,6 +7,8 @@ import { PermitExtractor } from "./permitExtractor";
 import { CommitmentExtractor } from "./commitmentExtractor";
 import { CommitmentEntity } from "../entities/CommitmentEntity";
 import { block, commitmentAddress, permitAddress, RWTId } from "./utilsVariable.mock";
+
+const dataSourcePromise = loadDataBase();
 
 describe('CommitmentExtractor', () => {
 
@@ -17,8 +20,8 @@ describe('CommitmentExtractor', () => {
      */
     describe("getId", () => {
         it("should return id of the extractor", async () => {
-            const db = await loadDataBase("commitment-getId");
-            const extractor = new PermitExtractor("extractorId", db, permitAddress, RWTId);
+            const dataSource = await dataSourcePromise;
+            const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const data = extractor.getId();
             expect(data).toBe("extractorId");
         })
@@ -33,7 +36,7 @@ describe('CommitmentExtractor', () => {
          * Expected: processTransactions should returns true and database row count should be 2
          */
         it('should save 2 commitments', async () => {
-            const dataSource = await loadDataBase("commitment-processTransaction");
+            const dataSource = await dataSourcePromise;
             const extractor = new CommitmentExtractor('extractorId', [commitmentAddress], RWTId, dataSource);
             const tx1 = commitmentTxGenerator(true, ['wid1'], ['1'], 'digest1');
             const tx2 = commitmentTxGenerator(true, ['wid2'], ['2'], 'digest2');
@@ -43,6 +46,7 @@ describe('CommitmentExtractor', () => {
             const repository = dataSource.getRepository(CommitmentEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
+            await clearDB(dataSource);
         })
     })
 
@@ -55,7 +59,7 @@ describe('CommitmentExtractor', () => {
          * Expected: afterCalling forkBlock database row count should be 0
          */
         it("should remove only block with specific block id and extractor id", async () => {
-            const dataSource = await loadDataBase("commitment-forkBlock");
+            const dataSource = await dataSourcePromise;
             const extractor = new CommitmentExtractor('extractorId', [commitmentAddress], RWTId, dataSource);
             const tx1 = commitmentTxGenerator(true, ['wid1'], ['1'], 'digest1');
             const tx2 = commitmentTxGenerator(true, ['wid2'], ['2'], 'digest2');
@@ -65,6 +69,7 @@ describe('CommitmentExtractor', () => {
             const repository = dataSource.getRepository(CommitmentEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(0);
+            await clearDB(dataSource);
         });
     })
 
