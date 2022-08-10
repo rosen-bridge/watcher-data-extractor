@@ -1,16 +1,20 @@
 import {
-    block,
-    commitmentAddress,
     commitmentTxGenerator,
     loadDataBase,
-    permitAddress,
-    RWTId
-} from "./utils.mock";
+} from "./utilsFunctions.mock";
 import { PermitExtractor } from "./permitExtractor";
 import { CommitmentExtractor } from "./commitmentExtractor";
 import { CommitmentEntity } from "../entities/CommitmentEntity";
+import { block, commitmentAddress, permitAddress, RWTId } from "./utilsVariable.mock";
 
 describe('CommitmentExtractor', () => {
+
+    /**
+     * getting id of the extractor tests
+     * Dependency: Nothing
+     * Scenario: calling getId of CommitmentExtractor
+     * Expected: getId should return 'extractorId'
+     */
     describe("getId", () => {
         it("should return id of the extractor", async () => {
             const db = await loadDataBase("commitment-getId");
@@ -21,6 +25,13 @@ describe('CommitmentExtractor', () => {
     })
 
     describe('processTransaction', () => {
+
+        /**
+         * 2 valid commitment should save successfully
+         * Dependency: Nothing
+         * Scenario: block with 3 transaction passed to the function and 2 of the transactions are valid commitment
+         * Expected: processTransactions should returns true and database row count should be 2
+         */
         it('should save 2 commitments', async () => {
             const dataSource = await loadDataBase("commitment-processTransaction");
             const extractor = new CommitmentExtractor('extractorId', [commitmentAddress], RWTId, dataSource);
@@ -36,6 +47,13 @@ describe('CommitmentExtractor', () => {
     })
 
     describe("forkBlock", () => {
+
+        /**
+         * forkBlock should delete block from database
+         * Dependency: Nothing
+         * Scenario: 2 valid commitment saved in the dataBase, and then we call forkBlock
+         * Expected: afterCalling forkBlock database row count should be 0
+         */
         it("should remove only block with specific block id and extractor id", async () => {
             const dataSource = await loadDataBase("commitment-forkBlock");
             const extractor = new CommitmentExtractor('extractorId', [commitmentAddress], RWTId, dataSource);

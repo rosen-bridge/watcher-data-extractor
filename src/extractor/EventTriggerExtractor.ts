@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
 import * as wasm from 'ergo-lib-wasm-nodejs';
 import { EventTriggerDB } from "../actions/EventTriggerDB";
-import { extractedBox } from "../interfaces/extractedBox";
 import { AbstractExtractor, BlockEntity } from "@rosen-bridge/scanner";
+import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
 
 export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
     id: string;
@@ -31,28 +31,49 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
     processTransactions = (txs: Array<wasm.Transaction>, block: BlockEntity): Promise<boolean> => {
         return new Promise((resolve, reject) => {
             try {
-                const boxes: Array<extractedBox> = [];
+                const boxes: Array<ExtractedEventTrigger> = [];
                 txs.forEach(transaction => {
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index);
-
                         if (output.tokens().len() > 0 &&
                             output.tokens().get(0).id().to_str() == this.RWT &&
                             output.register_value(4) &&
+                            output.register_value(5) &&
                             output.register_value(4)!.to_coll_coll_byte() &&
+                            output.register_value(5)!.to_coll_coll_byte() &&
                             output.register_value(4)!.to_coll_coll_byte().length >= 1 &&
+                            output.register_value(5)!.to_coll_coll_byte().length >= 4 &&
                             output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
+                            const R5 = output.register_value(5)!.to_coll_coll_byte();
+                            const R4 = output.register_value(4)!.to_coll_coll_byte();
+                            const WIDs = R4.map(byteArray => {
+                                Buffer.from(byteArray).toString()
+                            }).join(',');
+                            const asset = output.tokens().get(0);
+                            // TODO: fix fromAddress when it was fixed in the watcher side
+                            const inputAddress = "fromAddress"
                             boxes.push({
                                 boxId: output.box_id().to_str(),
-                                boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64")
+                                boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
+                                toChain: Buffer.from(R5[0]).toString(),
+                                toAddress: Buffer.from(R5[1]).toString(),
+                                networkFee: Buffer.from(R5[2]).toString(),
+                                bridgeFee: Buffer.from(R5[3]).toString(),
+                                amount: asset.amount().as_i64().to_str(),
+                                sourceChainTokenId: asset.amount().as_i64().to_str(),
+                                sourceTxId: transaction.id().to_str(),
+                                fromChain: "ergo",
+                                fromAddress: inputAddress,
+                                WIDs: WIDs,
                             })
                         }
 
                     }
                 });
-                this.actions.storeBoxes(boxes, block, this.getId()).then(() => {
+                this.actions.storeEventTriggers(boxes, block, this.getId()).then(() => {
                     resolve(true)
                 }).catch((e) => {
+                    console.log(`Error in soring permits of the block ${block}`)
                     console.log(e);
                     reject(e)
                 })

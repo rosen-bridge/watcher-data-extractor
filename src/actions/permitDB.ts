@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { extractedBox } from "../interfaces/extractedBox";
+import { extractedPermit } from "../interfaces/extractedPermit";
 import { PermitEntity } from "../entities/PermitEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
 
@@ -14,14 +14,16 @@ export class PermitEntityAction{
      * It stores list of permits in the dataSource with block id
      * @param permits
      * @param block
+     * @param extractor
      */
-    storeBoxes = async (permits: Array<extractedBox>, block: BlockEntity, extractor: string) => {
-        const permitEntity = permits.map((box) => {
+    storePermits = async (permits: Array<extractedPermit>, block: BlockEntity, extractor: string) => {
+        const permitEntity = permits.map((permit) => {
             const row = new PermitEntity();
-            row.boxId = box.boxId;
-            row.boxSerialized = box.boxSerialized;
+            row.boxId = permit.boxId;
+            row.boxSerialized = permit.boxSerialized;
             row.block = block.hash;
             row.extractor = extractor;
+            row.WID = permit.WID;
             return row;
         });
         let success = true;
@@ -40,6 +42,11 @@ export class PermitEntityAction{
         return success;
     }
 
+    /**
+     * deleting all permits corresponding to the block(id) and extractor(id)
+     * @param block
+     * @param extractor
+     */
     //TODO: should check if deleted or not Promise<Boolean>
     deleteBlock = async (block: string, extractor: string): Promise<void> => {
         await this.datasource.createQueryBuilder()

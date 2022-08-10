@@ -1,6 +1,7 @@
-import { block, loadDataBase } from "../extractor/utils.mock";
+import { loadDataBase } from "../extractor/utilsFunctions.mock";
 import { CommitmentEntityAction } from "./commitmentDB";
 import { CommitmentEntity } from "../entities/CommitmentEntity";
+import { block } from "../extractor/utilsVariable.mock";
 
 const commitment1 = {
     WID: "wid1",

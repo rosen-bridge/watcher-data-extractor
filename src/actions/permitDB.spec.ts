@@ -1,14 +1,17 @@
-import { block, loadDataBase } from "../extractor/utils.mock";
+import { loadDataBase } from "../extractor/utilsFunctions.mock";
 import { PermitEntityAction } from "./permitDB";
 import { PermitEntity } from "../entities/PermitEntity";
+import { block } from "../extractor/utilsVariable.mock";
 
 const sampleBox1 = {
     boxId: "1",
     boxSerialized: "serialized1",
+    WID: "wid1",
 }
 const sampleBox2 = {
     boxId: "2",
     boxSerialized: "serialized2",
+    WID: "wid2",
 }
 
 describe("PermitEntityAction", () => {
@@ -23,7 +26,7 @@ describe("PermitEntityAction", () => {
         it('gets two PermitBox and dataBase row should be 2', async () => {
             const dataSource = await loadDataBase("PermitEntity-storeBoxes");
             const permitEntity = new PermitEntityAction(dataSource);
-            const res = await permitEntity.storeBoxes([sampleBox1, sampleBox2], block, 'extractor1');
+            const res = await permitEntity.storePermits([sampleBox1, sampleBox2], block, 'extractor1');
             expect(res).toBe(true);
             const repository = dataSource.getRepository(PermitEntity);
             const [, rowsCount] = await repository.findAndCount();
@@ -41,9 +44,9 @@ describe("PermitEntityAction", () => {
         it('should deleted one row of the dataBase correspond to one block', async () => {
             const dataSource = await loadDataBase("PermitEntity-deleteBlock");
             const permitEntity = new PermitEntityAction(dataSource);
-            let res = await permitEntity.storeBoxes([sampleBox1], block, 'extractor1');
+            let res = await permitEntity.storePermits([sampleBox1], block, 'extractor1');
             expect(res).toBe(true);
-            res = await permitEntity.storeBoxes([sampleBox2], {...block, hash: "hash2"}, 'extractor2');
+            res = await permitEntity.storePermits([sampleBox2], {...block, hash: "hash2"}, 'extractor2');
             expect(res).toBe(true);
             const repository = dataSource.getRepository(PermitEntity);
             let [_, rowsCount] = await repository.findAndCount();

@@ -1,14 +1,37 @@
-import { block, loadDataBase } from "../extractor/utils.mock";
+import { loadDataBase } from "../extractor/utilsFunctions.mock";
 import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import { EventTriggerDB } from "./EventTriggerDB";
+import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
+import { block } from "../extractor/utilsVariable.mock";
 
-const sampleBox1 = {
+const sampleBox1: ExtractedEventTrigger = {
+    WIDs: "wid2",
+    amount: "22",
+    bridgeFee: "11",
+    fromAddress: "ergoAddress1",
+    fromChain: "ergo",
+    networkFee: "88",
+    sourceChainTokenId: "tokenId2",
+    sourceTxId: "txId2",
+    toAddress: "addr4",
+    toChain: "cardano",
     boxId: "1",
-    boxSerialized: "serialized1",
+    boxSerialized: "serialized1"
 }
-const sampleBox2 = {
+const sampleBox2: ExtractedEventTrigger = {
+    WIDs: "1",
+    amount: "100",
+    bridgeFee: "10",
+    fromAddress: "address",
+    fromChain: "ergo",
+    networkFee: "1000",
+    sourceChainTokenId: "tokenId1",
+    sourceTxId: "txId1",
+    toAddress: "addr1",
+    toChain: "cardano",
     boxId: "2",
-    boxSerialized: "serialized2",
+    boxSerialized: "serialized2"
+
 }
 
 
@@ -24,7 +47,7 @@ describe("EventTrigger", () => {
         it('gets two EventBoxes and dataBase row should be 2', async () => {
             const dataSource = await loadDataBase("EventTrigger-storeBoxes");
             const eventTrigger = new EventTriggerDB(dataSource);
-            const res = await eventTrigger.storeBoxes([sampleBox1, sampleBox2], block, 'extractor1');
+            const res = await eventTrigger.storeEventTriggers([sampleBox1, sampleBox2], block, 'extractor1');
             expect(res).toBe(true);
             const repository = dataSource.getRepository(EventTriggerEntity);
             const [, rowsCount] = await repository.findAndCount();
@@ -43,8 +66,8 @@ describe("EventTrigger", () => {
         it('should deleted one row of the dataBase correspond to one block', async () => {
             const dataSource = await loadDataBase("EventTrigger-deleteBlock");
             const eventTrigger = new EventTriggerDB(dataSource);
-            await eventTrigger.storeBoxes([sampleBox1], block, 'extractor1');
-            await eventTrigger.storeBoxes([sampleBox2], {...block, hash: 'hash2'}, 'extractor2');
+            await eventTrigger.storeEventTriggers([sampleBox1], block, 'extractor1');
+            await eventTrigger.storeEventTriggers([sampleBox2], {...block, hash: 'hash2'}, 'extractor2');
             const repository = dataSource.getRepository(EventTriggerEntity);
             let [_, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);

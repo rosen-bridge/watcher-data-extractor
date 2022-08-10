@@ -74,6 +74,8 @@ export class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
                     })
                 }).catch((e) => reject(e))
             } catch (e) {
+                console.log(`Error in soring permits of the block ${block}`);
+                console.log(e);
                 reject(e)
             }
         })

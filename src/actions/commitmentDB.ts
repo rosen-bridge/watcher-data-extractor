@@ -43,6 +43,11 @@ export class CommitmentEntityAction{
         return success;
     }
 
+    /**
+     * update spendBlock Column of the commitments in the dataBase
+     * @param spendId
+     * @param block
+     */
     spendCommitments = async (spendId: Array<string>, block: BlockEntity): Promise<void> => {
         //todo: should change with single db call
         for (const id of spendId) {
@@ -54,6 +59,11 @@ export class CommitmentEntityAction{
         }
     }
 
+    /**
+     * deleting all permits corresponding to the block(id) and extractor(id)
+     * @param block
+     * @param extractor
+     */
     deleteBlockCommitment = async (block: string, extractor: string) => {
         await this.datasource.createQueryBuilder()
             .delete()

@@ -1,7 +1,7 @@
 import { DataSource } from "typeorm";
-import { extractedBox } from "../interfaces/extractedBox";
 import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
+import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
 
 export class EventTriggerDB{
     private readonly datasource: DataSource;
@@ -16,13 +16,23 @@ export class EventTriggerDB{
      * @param block
      * @param extractor
      */
-    storeBoxes = async (wids: Array<extractedBox>, block: BlockEntity, extractor: string) => {
-        const widEntity = wids.map((box) => {
+    storeEventTriggers = async (wids: Array<ExtractedEventTrigger>, block: BlockEntity, extractor: string) => {
+        const widEntity = wids.map((event) => {
             const row = new EventTriggerEntity();
-            row.boxId = box.boxId;
-            row.boxSerialized = box.boxSerialized;
+            row.boxId = event.boxId;
+            row.boxSerialized = event.boxSerialized;
             row.block = block.hash;
             row.extractor = extractor;
+            row.WIDs = event.WIDs;
+            row.amount = event.amount;
+            row.bridgeFee = event.bridgeFee;
+            row.fromAddress = event.fromAddress;
+            row.toAddress = event.toAddress;
+            row.fromChain = event.fromChain;
+            row.networkFee = event.networkFee;
+            row.sourceChainTokenId = event.sourceChainTokenId;
+            row.toChain = event.toChain;
+            row.sourceTxId = event.sourceTxId;
             return row;
         });
         let success = true;
@@ -41,6 +51,11 @@ export class EventTriggerDB{
         return success;
     }
 
+    /**
+     * deleting all permits corresponding to the block(id) and extractor(id)
+     * @param block
+     * @param extractor
+     */
     deleteBlock = async (block: string, extractor: string) => {
         await this.datasource.createQueryBuilder()
             .delete()

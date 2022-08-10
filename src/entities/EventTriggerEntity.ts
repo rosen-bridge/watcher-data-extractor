@@ -1,8 +1,7 @@
-
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class EventTriggerEntity {
+export class EventTriggerEntity{
     @PrimaryGeneratedColumn()
     id: number
 
@@ -17,4 +16,35 @@ export class EventTriggerEntity {
 
     @Column()
     block: string
+
+    @Column()
+    fromChain: string
+
+    @Column()
+    toChain: string
+
+    @Column()
+    fromAddress: string
+
+    @Column()
+    toAddress: string
+
+    @Column()
+    amount: string
+
+    @Column()
+    bridgeFee: string
+
+    @Column()
+    networkFee: string
+
+    @Column()
+    sourceChainTokenId: string
+
+    @Column()
+    sourceTxId: string
+
+    @Column()
+    WIDs: string
+
 }
