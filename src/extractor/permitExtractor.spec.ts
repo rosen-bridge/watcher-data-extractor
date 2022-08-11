@@ -7,6 +7,9 @@ import { DataSource } from "typeorm";
 let dataSource: DataSource;
 
 describe('permitExtractor', () => {
+    beforeAll(async () => {
+        dataSource = await loadDataBase();
+    });
 
     /**
      * getting id of the extractor tests
