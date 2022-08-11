@@ -2,6 +2,7 @@ import { clearDB, loadDataBase } from "../extractor/utilsFunctions.mock";
 import { PermitEntityAction } from "./permitDB";
 import { PermitEntity } from "../entities/PermitEntity";
 import { block } from "../extractor/utilsVariable.mock";
+import { DataSource } from "typeorm";
 
 const sampleBox1 = {
     boxId: "1",
@@ -14,10 +15,13 @@ const sampleBox2 = {
     WID: "wid2",
 }
 
-const dataSourcePromise = loadDataBase();
+let dataSource: DataSource;
 
 describe("PermitEntityAction", () => {
     describe("storeBoxes", () => {
+        beforeAll(async () => {
+            dataSource = await loadDataBase();
+        });
 
         /**
          * 2 valid PermitBox should save successfully
@@ -26,7 +30,6 @@ describe("PermitEntityAction", () => {
          * Expected: storeBoxes should returns true and database row count should be 2
          */
         it('gets two PermitBox and dataBase row should be 2', async () => {
-            const dataSource = await dataSourcePromise;
             const permitEntity = new PermitEntityAction(dataSource);
             const res = await permitEntity.storePermits([sampleBox1, sampleBox2], block, 'extractor1');
             expect(res).toBe(true);
@@ -45,7 +48,6 @@ describe("PermitEntityAction", () => {
      */
     describe("deleteBlock", () => {
         it('should deleted one row of the dataBase correspond to one block', async () => {
-            const dataSource = await dataSourcePromise;
             const permitEntity = new PermitEntityAction(dataSource);
             let res = await permitEntity.storePermits([sampleBox1], block, 'extractor1');
             expect(res).toBe(true);

@@ -2,12 +2,16 @@ import { clearDB, eventTriggerTxGenerator, loadDataBase } from "./utilsFunctions
 import { EventTriggerExtractor } from "./EventTriggerExtractor";
 import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import { block, eventTriggerAddress, RWTId } from "./utilsVariable.mock";
+import { DataSource } from "typeorm";
 
-const dataSourcePromise = loadDataBase();
+let dataSource: DataSource;
 const sampleEventData = ['txid1', 'ergo', 'cardano', 'addr1', 'cardanoAddr2', '1000', '10', '1', 'token1', 'asset1', 'blockId'];
 
 describe("EventTriggerExtractor", () => {
     describe("getId", () => {
+        beforeAll(async () => {
+            dataSource = await loadDataBase();
+        });
 
         /**
          * getting id of the extractor tests
@@ -16,7 +20,6 @@ describe("EventTriggerExtractor", () => {
          * Expected: getId should return 'extractorId'
          */
         it("should return id of the extractor", async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new EventTriggerExtractor("extractorId", dataSource, eventTriggerAddress, RWTId);
             const data = extractor.getId();
             expect(data).toBe("extractorId");
@@ -32,7 +35,6 @@ describe("EventTriggerExtractor", () => {
          * Expected: processTransactions should returns true and database row count should be 1
          */
         it('should save one eventTrigger successfully', async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new EventTriggerExtractor('extractorId', dataSource, eventTriggerAddress, RWTId);
             const tx1 = eventTriggerTxGenerator(true, ['wid1'], sampleEventData);
             const res = await extractor.processTransactions([tx1], block);
@@ -49,8 +51,10 @@ describe("EventTriggerExtractor", () => {
          * Scenario: block with 5 transaction passed to the function and 2 of the transactions are valid eventTrigger
          * Expected: processTransactions should returns true and database row count should be 2
          */
-        it('should save 2 eventTrigger successfully out of 4 transaction', async () => {
-            const dataSource = await dataSourcePromise;
+        it('should save 2 eventTrigger successfully out of 5 transaction', async () => {
+            const repository1 = dataSource.getRepository(EventTriggerEntity);
+            const [, rowsCount1] = await repository1.findAndCount();
+            expect(rowsCount1).toBe(0);
             const extractor = new EventTriggerExtractor('extractorId', dataSource, eventTriggerAddress, RWTId);
             const tx1 = eventTriggerTxGenerator(true, ['wid1'], sampleEventData);
             const tx2 = eventTriggerTxGenerator(true, [], sampleEventData);

@@ -3,6 +3,7 @@ import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import { EventTriggerDB } from "./EventTriggerDB";
 import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
 import { block } from "../extractor/utilsVariable.mock";
+import { DataSource } from "typeorm";
 
 const sampleBox1: ExtractedEventTrigger = {
     WIDs: "wid2",
@@ -37,10 +38,13 @@ const sampleBox2: ExtractedEventTrigger = {
     sourceBlockId: "blockId",
 }
 
-const dataSourcePromise = loadDataBase();
+let dataSource: DataSource;
 
 describe("EventTrigger", () => {
     describe("storeBoxes", () => {
+        beforeAll(async () => {
+            dataSource = await loadDataBase();
+        });
 
         /**
          * 2 valid EventTrigger Box should save successfully
@@ -49,7 +53,6 @@ describe("EventTrigger", () => {
          * Expected: storeBoxes should returns true and database row count should be 2
          */
         it('gets two EventBoxes and dataBase row should be 2', async () => {
-            const dataSource = await dataSourcePromise;
             const eventTrigger = new EventTriggerDB(dataSource);
             const res = await eventTrigger.storeEventTriggers([sampleBox1, sampleBox2], block, 'extractor1');
             expect(res).toBe(true);
@@ -69,7 +72,6 @@ describe("EventTrigger", () => {
          * Expected: deleteBlock should call without no error and database row count should be 1
          */
         it('should deleted one row of the dataBase correspond to one block', async () => {
-            const dataSource = await dataSourcePromise;
             const eventTrigger = new EventTriggerDB(dataSource);
             await eventTrigger.storeEventTriggers([sampleBox1], block, 'extractor1');
             await eventTrigger.storeEventTriggers([sampleBox2], {...block, hash: 'hash2'}, 'extractor2');

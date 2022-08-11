@@ -2,6 +2,7 @@ import { clearDB, loadDataBase } from "../extractor/utilsFunctions.mock";
 import { CommitmentEntityAction } from "./commitmentDB";
 import { CommitmentEntity } from "../entities/CommitmentEntity";
 import { block } from "../extractor/utilsVariable.mock";
+import { DataSource } from "typeorm";
 
 const commitment1 = {
     WID: "wid1",
@@ -17,10 +18,13 @@ const commitment2 = {
     commitmentBoxId: "boxId2",
 }
 
-const dataSourcePromise = loadDataBase();
+let dataSource: DataSource;
 
 describe('commitmentEntityAction', () => {
     describe('storeCommitments', () => {
+        beforeAll(async () => {
+            dataSource = await loadDataBase();
+        });
 
         /**
          * 2 valid Commitment should save successfully
@@ -29,7 +33,6 @@ describe('commitmentEntityAction', () => {
          * Expected: storeCommitments should returns true and database row count should be 2
          */
         it('gets two commitments and dataBase row should be 2', async () => {
-            const dataSource = await dataSourcePromise;
             const commitmentEntity = new CommitmentEntityAction(dataSource);
             const res = await commitmentEntity.storeCommitments([commitment1, commitment2], block, 'extractor1');
             expect(res).toBe(true);
@@ -48,7 +51,6 @@ describe('commitmentEntityAction', () => {
      */
     describe('spendCommitments', () => {
         it('sets one spendBlock for one commitments & one row should have spendBlock', async () => {
-            const dataSource = await dataSourcePromise;
             const commitmentEntity = new CommitmentEntityAction(dataSource);
             const res = await commitmentEntity.storeCommitments([commitment1, commitment2], block, 'extractor1');
             expect(res).toBe(true);
@@ -69,7 +71,6 @@ describe('commitmentEntityAction', () => {
          * Expected: deleteBlock should call without no error and database row count should be 1
          */
         it('should deleted one row of the dataBase correspond to one block', async () => {
-            const dataSource = await dataSourcePromise;
             const commitmentEntity = new CommitmentEntityAction(dataSource);
             await commitmentEntity.storeCommitments([commitment1], block, 'extractor1');
             await commitmentEntity.storeCommitments([commitment2], {...block, hash: 'hash2'}, 'extractor1');

@@ -2,10 +2,14 @@ import { clearDB, loadDataBase, permitTxGenerator } from "./utilsFunctions.mock"
 import { PermitExtractor } from "./permitExtractor";
 import { PermitEntity } from "../entities/PermitEntity";
 import { block, permitAddress, RWTId } from "./utilsVariable.mock";
+import { DataSource } from "typeorm";
 
-const dataSourcePromise = loadDataBase();
+let dataSource: DataSource;
 
 describe('permitExtractor', () => {
+    beforeAll(async () => {
+        dataSource = await loadDataBase();
+    });
 
     /**
      * getting id of the extractor tests
@@ -15,7 +19,6 @@ describe('permitExtractor', () => {
      */
     describe("getId", () => {
         it("should return id of the extractor", async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const data = extractor.getId();
             expect(data).toBe("extractorId");
@@ -30,7 +33,6 @@ describe('permitExtractor', () => {
          * Expected: processTransactions should returns true and database row count should be 3
          */
         it("should save 3 permits", async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const tx1 = permitTxGenerator(true, 'wid1');
             const tx2 = permitTxGenerator(true, 'wid2');
@@ -50,7 +52,6 @@ describe('permitExtractor', () => {
          * Expected: processTransactions should returns true and database row count should be 2
          */
         it("should save 2 permits out of 3 transaction", async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const tx1 = permitTxGenerator(true, 'wid1');
             const tx2 = permitTxGenerator(false, 'wid2');
@@ -74,7 +75,6 @@ describe('permitExtractor', () => {
          * Expected: afterCalling forkBlock database row count should be 0
          */
         it("should remove only block with specific block id and extractor id", async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const tx1 = permitTxGenerator(true, 'wid1');
             const tx2 = permitTxGenerator(true, 'wid2');

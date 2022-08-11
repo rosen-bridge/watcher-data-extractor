@@ -1,16 +1,19 @@
 import {
     clearDB,
-    commitmentTxGenerator,
-    loadDataBase,
+    commitmentTxGenerator, loadDataBase,
 } from "./utilsFunctions.mock";
 import { PermitExtractor } from "./permitExtractor";
 import { CommitmentExtractor } from "./commitmentExtractor";
 import { CommitmentEntity } from "../entities/CommitmentEntity";
 import { block, commitmentAddress, permitAddress, RWTId } from "./utilsVariable.mock";
+import { DataSource } from "typeorm";
 
-const dataSourcePromise = loadDataBase();
+let dataSource: DataSource;
 
 describe('CommitmentExtractor', () => {
+    beforeAll(async () => {
+        dataSource = await loadDataBase();
+    });
 
     /**
      * getting id of the extractor tests
@@ -20,7 +23,6 @@ describe('CommitmentExtractor', () => {
      */
     describe("getId", () => {
         it("should return id of the extractor", async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
             const data = extractor.getId();
             expect(data).toBe("extractorId");
@@ -36,7 +38,6 @@ describe('CommitmentExtractor', () => {
          * Expected: processTransactions should returns true and database row count should be 2
          */
         it('should save 2 commitments', async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new CommitmentExtractor('extractorId', [commitmentAddress], RWTId, dataSource);
             const tx1 = commitmentTxGenerator(true, ['wid1'], ['1'], 'digest1');
             const tx2 = commitmentTxGenerator(true, ['wid2'], ['2'], 'digest2');
@@ -59,7 +60,6 @@ describe('CommitmentExtractor', () => {
          * Expected: afterCalling forkBlock database row count should be 0
          */
         it("should remove only block with specific block id and extractor id", async () => {
-            const dataSource = await dataSourcePromise;
             const extractor = new CommitmentExtractor('extractorId', [commitmentAddress], RWTId, dataSource);
             const tx1 = commitmentTxGenerator(true, ['wid1'], ['1'], 'digest1');
             const tx2 = commitmentTxGenerator(true, ['wid2'], ['2'], 'digest2');
