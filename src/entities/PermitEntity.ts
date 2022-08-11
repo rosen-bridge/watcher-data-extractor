@@ -18,5 +18,5 @@ export class PermitEntity{
     WID: string
 
     @Column()
-    block: string
+    blockId: string
 }

@@ -10,7 +10,7 @@ export class permitMigration1659787021000 implements MigrationInterface{
                     "extractor" varchar NOT NULL, 
                     "boxId" varchar NOT NULL, 
                     "boxSerialized" varchar NOT NULL, 
-                    "block" varchar NOT NULL,
+                    "blockId" varchar NOT NULL,
                     "WID" varchar NOT NULL
                 )`
         );

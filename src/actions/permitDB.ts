@@ -21,7 +21,7 @@ export class PermitEntityAction{
             const row = new PermitEntity();
             row.boxId = permit.boxId;
             row.boxSerialized = permit.boxSerialized;
-            row.block = block.hash;
+            row.blockId = block.hash;
             row.extractor = extractor;
             row.WID = permit.WID;
             return row;
@@ -52,7 +52,7 @@ export class PermitEntityAction{
         await this.datasource.createQueryBuilder()
             .delete()
             .from(PermitEntity)
-            .where("extractor = :extractor AND block = :block", {
+            .where("extractor = :extractor AND blockId = :block", {
                 "block": block,
                 "extractor": extractor
             }).execute()

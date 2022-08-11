@@ -9,6 +9,8 @@ export interface ExtractedEventTrigger{
     bridgeFee: string,
     networkFee: string,
     sourceChainTokenId: string,
+    targetChainTokenId: string,
+    sourceBlockId: string,
     sourceTxId: string,
     WIDs: string,
 }

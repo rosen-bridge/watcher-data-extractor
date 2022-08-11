@@ -15,7 +15,7 @@ export class EventTriggerEntity{
     boxSerialized: string
 
     @Column()
-    block: string
+    blockId: string
 
     @Column()
     fromChain: string
@@ -42,7 +42,13 @@ export class EventTriggerEntity{
     sourceChainTokenId: string
 
     @Column()
+    targetChainTokenId: string
+
+    @Column()
     sourceTxId: string
+
+    @Column()
+    sourceBlockId: string
 
     @Column()
     WIDs: string

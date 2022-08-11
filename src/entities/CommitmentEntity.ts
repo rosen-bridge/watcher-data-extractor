@@ -21,7 +21,7 @@ export class CommitmentEntity {
     commitmentBoxId: string;
 
     @Column()
-    block: string;
+    blockId: string;
 
     @Column({nullable: true})
     spendBlock?: string;

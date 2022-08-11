@@ -24,7 +24,7 @@ export class CommitmentEntityAction{
             row.commitmentBoxId = commitment.commitmentBoxId;
             row.WID = commitment.WID;
             row.extractor = extractorId;
-            row.block = block.hash;
+            row.blockId = block.hash;
             return row;
         });
         let success = true;
@@ -54,7 +54,7 @@ export class CommitmentEntityAction{
             await this.datasource.createQueryBuilder()
                 .update(CommitmentEntity)
                 .set({spendBlock: block.hash})
-                .where("commitmentBoxId = :id", {id: spendId})
+                .where("commitmentBoxId = :id", {id: id})
                 .execute()
         }
     }
@@ -68,7 +68,7 @@ export class CommitmentEntityAction{
         await this.datasource.createQueryBuilder()
             .delete()
             .from(CommitmentEntity)
-            .where("extractor = :extractor AND block = :block", {
+            .where("extractor = :extractor AND blockId = :block", {
                 "block": block,
                 "extractor": extractor
             }).execute()

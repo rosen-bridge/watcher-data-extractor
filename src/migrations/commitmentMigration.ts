@@ -12,7 +12,7 @@ export class commitmentMigration1659787165000 implements MigrationInterface{
                     "commitment" varchar NOT NULL, 
                     "WID" varchar NOT NULL, 
                     "commitmentBoxId" varchar NOT NULL, 
-                    "block" varchar NOT NULL, 
+                    "blockId" varchar NOT NULL, 
                     "spendBlock" varchar
                 )`
         );

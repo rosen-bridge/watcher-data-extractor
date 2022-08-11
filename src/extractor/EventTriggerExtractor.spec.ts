@@ -4,6 +4,7 @@ import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import { block, eventTriggerAddress, RWTId } from "./utilsVariable.mock";
 
 const dataSourcePromise = loadDataBase();
+const sampleEventData = ['txid1', 'ergo', 'cardano', 'addr1', 'cardanoAddr2', '1000', '10', '1', 'token1', 'asset1', 'blockId'];
 
 describe("EventTriggerExtractor", () => {
     describe("getId", () => {
@@ -33,7 +34,7 @@ describe("EventTriggerExtractor", () => {
         it('should save one eventTrigger successfully', async () => {
             const dataSource = await dataSourcePromise;
             const extractor = new EventTriggerExtractor('extractorId', dataSource, eventTriggerAddress, RWTId);
-            const tx1 = eventTriggerTxGenerator(true, ['wid1'], ['cardano', 'addr1', '1000', '10000']);
+            const tx1 = eventTriggerTxGenerator(true, ['wid1'], sampleEventData);
             const res = await extractor.processTransactions([tx1], block);
             expect(res).toBeTruthy();
             const repository = dataSource.getRepository(EventTriggerEntity);
@@ -51,10 +52,10 @@ describe("EventTriggerExtractor", () => {
         it('should save 2 eventTrigger successfully out of 4 transaction', async () => {
             const dataSource = await dataSourcePromise;
             const extractor = new EventTriggerExtractor('extractorId', dataSource, eventTriggerAddress, RWTId);
-            const tx1 = eventTriggerTxGenerator(true, ['wid1'], ['cardano', 'addr1', '1000', '10000']);
-            const tx2 = eventTriggerTxGenerator(true, [], ['cardano', 'addr1', '1000', '10000']);
-            const tx3 = eventTriggerTxGenerator(false, ['wid3'], ['cardano', 'addr1', '1000', '10000']);
-            const tx4 = eventTriggerTxGenerator(true, ['wid4'], ['cardano', 'addr1', '1000', '10000']);
+            const tx1 = eventTriggerTxGenerator(true, ['wid1'], sampleEventData);
+            const tx2 = eventTriggerTxGenerator(true, [], sampleEventData);
+            const tx3 = eventTriggerTxGenerator(false, ['wid3'], sampleEventData);
+            const tx4 = eventTriggerTxGenerator(true, ['wid4'], sampleEventData);
             const tx5 = eventTriggerTxGenerator(true, ['wid5'], []);
             const res = await extractor.processTransactions([tx1, tx2, tx3, tx4, tx5], block);
             expect(res).toBeTruthy();

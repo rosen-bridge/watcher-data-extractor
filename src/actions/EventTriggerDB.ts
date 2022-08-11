@@ -21,7 +21,7 @@ export class EventTriggerDB{
             const row = new EventTriggerEntity();
             row.boxId = event.boxId;
             row.boxSerialized = event.boxSerialized;
-            row.block = block.hash;
+            row.blockId = block.hash;
             row.extractor = extractor;
             row.WIDs = event.WIDs;
             row.amount = event.amount;
@@ -31,6 +31,8 @@ export class EventTriggerDB{
             row.fromChain = event.fromChain;
             row.networkFee = event.networkFee;
             row.sourceChainTokenId = event.sourceChainTokenId;
+            row.targetChainTokenId = event.targetChainTokenId;
+            row.sourceBlockId = event.sourceBlockId;
             row.toChain = event.toChain;
             row.sourceTxId = event.sourceTxId;
             return row;
@@ -60,7 +62,7 @@ export class EventTriggerDB{
         await this.datasource.createQueryBuilder()
             .delete()
             .from(EventTriggerEntity)
-            .where("extractor = :extractor AND block = :block", {
+            .where("extractor = :extractor AND blockId = :block", {
                 "block": block,
                 "extractor": extractor
             }).execute()

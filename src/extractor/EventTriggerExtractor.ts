@@ -17,7 +17,7 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
         this.dataSource = dataSource;
         this.actions = new EventTriggerDB(dataSource);
         this.eventTriggerErgoTree = wasm.Address.from_base58(address).to_ergo_tree().to_base16_bytes();
-        this.RWT = RWT
+        this.RWT = RWT;
     }
 
     getId = () => this.id;
@@ -42,28 +42,27 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                             output.register_value(4)!.to_coll_coll_byte() &&
                             output.register_value(5)!.to_coll_coll_byte() &&
                             output.register_value(4)!.to_coll_coll_byte().length >= 1 &&
-                            output.register_value(5)!.to_coll_coll_byte().length >= 4 &&
+                            output.register_value(5)!.to_coll_coll_byte().length >= 11 &&
                             output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
                             const R5 = output.register_value(5)!.to_coll_coll_byte();
                             const R4 = output.register_value(4)!.to_coll_coll_byte();
                             const WIDs = R4.map(byteArray => {
                                 Buffer.from(byteArray).toString()
                             }).join(',');
-                            const asset = output.tokens().get(0);
-                            // TODO: fix fromAddress when it was fixed in the watcher side
-                            const inputAddress = "fromAddress"
                             boxes.push({
                                 boxId: output.box_id().to_str(),
                                 boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
-                                toChain: Buffer.from(R5[0]).toString(),
-                                toAddress: Buffer.from(R5[1]).toString(),
-                                networkFee: Buffer.from(R5[2]).toString(),
-                                bridgeFee: Buffer.from(R5[3]).toString(),
-                                amount: asset.amount().as_i64().to_str(),
-                                sourceChainTokenId: asset.amount().as_i64().to_str(),
-                                sourceTxId: transaction.id().to_str(),
-                                fromChain: "ergo",
-                                fromAddress: inputAddress,
+                                toChain: Buffer.from(R5[2]).toString(),
+                                toAddress: Buffer.from(R5[4]).toString(),
+                                networkFee: Buffer.from(R5[7]).toString(),
+                                bridgeFee: Buffer.from(R5[6]).toString(),
+                                amount: Buffer.from(R5[5]).toString(),
+                                sourceChainTokenId: Buffer.from(R5[8]).toString(),
+                                targetChainTokenId: Buffer.from(R5[9]).toString(),
+                                sourceTxId: Buffer.from(R5[0]).toString(),
+                                fromChain: Buffer.from(R5[1]).toString(),
+                                fromAddress: Buffer.from(R5[3]).toString(),
+                                sourceBlockId: Buffer.from(R5[10]).toString(),
                                 WIDs: WIDs,
                             })
                         }

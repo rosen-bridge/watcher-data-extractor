@@ -10,7 +10,7 @@ export class eventTriggerMigration1659787067000 implements MigrationInterface{
                     "extractor" varchar NOT NULL, 
                     "boxId" varchar NOT NULL, 
                     "boxSerialized" varchar NOT NULL, 
-                    "block" varchar NOT NULL,
+                    "blockId" varchar NOT NULL,
                     "fromChain" varchar NOT NULL,
                     "toChain" varchar NOT NULL,
                     "fromAddress" varchar NOT NULL,
@@ -19,6 +19,8 @@ export class eventTriggerMigration1659787067000 implements MigrationInterface{
                     "bridgeFee" varchar NOT NULL,
                     "networkFee" varchar NOT NULL,
                     "sourceChainTokenId" varchar NOT NULL,
+                    "targetChainTokenId" varchar NOT NULL,
+                    "sourceBlockId" varchar NOT NULL,
                     "sourceTxId" varchar NOT NULL,
                     "WIDs" varchar NOT NULL
                 )`

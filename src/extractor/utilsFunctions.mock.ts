@@ -6,6 +6,11 @@ import { EventTriggerEntity } from "../entities/EventTriggerEntity";
 import * as wasm from "ergo-lib-wasm-nodejs";
 import { commitmentAddress, eventTriggerAddress, last10BlockHeader, permitAddress, RWTId } from "./utilsVariable.mock";
 
+/**
+ * generates a dataSource with filename passed to the function for database file name
+ *  used for test datasource
+ * @param name
+ */
 export const loadDataBase = async (name = "rosen-extractor"): Promise<DataSource> => {
     const dataSource = new DataSource({
         type: "sqlite",
@@ -20,6 +25,10 @@ export const loadDataBase = async (name = "rosen-extractor"): Promise<DataSource
     return dataSource;
 }
 
+/**
+ * cleaning all table of the passed datasource
+ * @param dataSource
+ */
 export async function clearDB(dataSource: DataSource) {
     const entities = dataSource.entityMetadatas;
     for (const entity of entities) {
@@ -29,6 +38,12 @@ export async function clearDB(dataSource: DataSource) {
     }
 }
 
+/**
+ * generates transaction with output address sets to permitAddress
+ *  hasToken sets that rwt set in the output or not
+ * @param hasToken
+ * @param WID
+ */
 export const permitTxGenerator = (
     hasToken = true,
     WID: string,
@@ -95,6 +110,13 @@ export const permitTxGenerator = (
 
 }
 
+/**
+ * generates transaction with output address sets to commitmentAddress
+ * @param hasToken
+ * @param WID
+ * @param requestId
+ * @param eventDigest
+ */
 export const commitmentTxGenerator = (
     hasToken = true,
     WID: Array<string>,
@@ -178,6 +200,12 @@ export const commitmentTxGenerator = (
 
 }
 
+/**
+ * generate transaction that first output address is set to eventTrigger address
+ * @param hasToken
+ * @param WID
+ * @param eventData
+ */
 export const eventTriggerTxGenerator = (
     hasToken = true,
     WID: Array<string>,
@@ -255,4 +283,3 @@ export const eventTriggerTxGenerator = (
     return wallet.sign_transaction(ctx, tx, unspentBoxes, wasm.ErgoBoxes.from_boxes_json([]))
 
 }
-

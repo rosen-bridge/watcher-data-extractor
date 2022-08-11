@@ -12,11 +12,13 @@ const sampleBox1: ExtractedEventTrigger = {
     fromChain: "ergo",
     networkFee: "88",
     sourceChainTokenId: "tokenId2",
+    targetChainTokenId: "asset2",
     sourceTxId: "txId2",
     toAddress: "addr4",
     toChain: "cardano",
     boxId: "1",
-    boxSerialized: "serialized1"
+    boxSerialized: "serialized1",
+    sourceBlockId: "blockId",
 }
 const sampleBox2: ExtractedEventTrigger = {
     WIDs: "1",
@@ -26,12 +28,13 @@ const sampleBox2: ExtractedEventTrigger = {
     fromChain: "ergo",
     networkFee: "1000",
     sourceChainTokenId: "tokenId1",
+    targetChainTokenId: "asset1",
     sourceTxId: "txId1",
     toAddress: "addr1",
     toChain: "cardano",
     boxId: "2",
-    boxSerialized: "serialized2"
-
+    boxSerialized: "serialized2",
+    sourceBlockId: "blockId",
 }
 
 const dataSourcePromise = loadDataBase();
