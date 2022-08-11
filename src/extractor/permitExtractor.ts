@@ -54,7 +54,7 @@ export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                 this.actions.storePermits(boxes, block, this.getId()).then(() => {
                     resolve(true)
                 }).catch((e) => {
-                    console.log(`Error in soring permits of the block ${block}`)
+                    console.log(`Error in storing permits of the block ${block}`)
                     console.log(e);
                     reject(e)
                 })
