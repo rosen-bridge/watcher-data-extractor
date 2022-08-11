@@ -21,10 +21,11 @@ const commitment2 = {
 let dataSource: DataSource;
 
 describe('commitmentEntityAction', () => {
+    beforeAll(async () => {
+        dataSource = await loadDataBase();
+    });
+
     describe('storeCommitments', () => {
-        beforeAll(async () => {
-            dataSource = await loadDataBase();
-        });
 
         /**
          * 2 valid Commitment should save successfully

@@ -41,10 +41,10 @@ const sampleBox2: ExtractedEventTrigger = {
 let dataSource: DataSource;
 
 describe("EventTrigger", () => {
+    beforeAll(async () => {
+        dataSource = await loadDataBase();
+    });
     describe("storeBoxes", () => {
-        beforeAll(async () => {
-            dataSource = await loadDataBase();
-        });
 
         /**
          * 2 valid EventTrigger Box should save successfully

@@ -8,10 +8,11 @@ let dataSource: DataSource;
 const sampleEventData = ['txid1', 'ergo', 'cardano', 'addr1', 'cardanoAddr2', '1000', '10', '1', 'token1', 'asset1', 'blockId'];
 
 describe("EventTriggerExtractor", () => {
+    beforeAll(async () => {
+        dataSource = await loadDataBase();
+    });
+
     describe("getId", () => {
-        beforeAll(async () => {
-            dataSource = await loadDataBase();
-        });
 
         /**
          * getting id of the extractor tests

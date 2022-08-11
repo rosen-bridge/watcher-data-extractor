@@ -18,10 +18,11 @@ const sampleBox2 = {
 let dataSource: DataSource;
 
 describe("PermitEntityAction", () => {
+    beforeAll(async () => {
+        dataSource = await loadDataBase();
+    });
+
     describe("storeBoxes", () => {
-        beforeAll(async () => {
-            dataSource = await loadDataBase();
-        });
 
         /**
          * 2 valid PermitBox should save successfully
