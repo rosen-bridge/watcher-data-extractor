@@ -15,6 +15,10 @@ describe('CommitmentExtractor', () => {
         dataSource = await loadDataBase();
     });
 
+    beforeEach(async () => {
+        await clearDB(dataSource);
+    })
+
     /**
      * getting id of the extractor tests
      * Dependency: Nothing
@@ -47,7 +51,6 @@ describe('CommitmentExtractor', () => {
             const repository = dataSource.getRepository(CommitmentEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
-            await clearDB(dataSource);
         })
     })
 
@@ -69,7 +72,6 @@ describe('CommitmentExtractor', () => {
             const repository = dataSource.getRepository(CommitmentEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(0);
-            await clearDB(dataSource);
         });
     })
 

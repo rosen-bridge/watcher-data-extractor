@@ -35,38 +35,42 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                 txs.forEach(transaction => {
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index);
-                        if (output.tokens().len() > 0 &&
-                            output.tokens().get(0).id().to_str() == this.RWT &&
-                            output.register_value(4) &&
-                            output.register_value(5) &&
-                            output.register_value(4)!.to_coll_coll_byte() &&
-                            output.register_value(5)!.to_coll_coll_byte() &&
-                            output.register_value(4)!.to_coll_coll_byte().length >= 1 &&
-                            output.register_value(5)!.to_coll_coll_byte().length >= 11 &&
-                            output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
-                            const R5 = output.register_value(5)!.to_coll_coll_byte();
-                            const R4 = output.register_value(4)!.to_coll_coll_byte();
-                            const WIDs = R4.map(byteArray => {
-                                Buffer.from(byteArray).toString()
-                            }).join(',');
-                            boxes.push({
-                                boxId: output.box_id().to_str(),
-                                boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
-                                toChain: Buffer.from(R5[2]).toString(),
-                                toAddress: Buffer.from(R5[4]).toString(),
-                                networkFee: Buffer.from(R5[7]).toString(),
-                                bridgeFee: Buffer.from(R5[6]).toString(),
-                                amount: Buffer.from(R5[5]).toString(),
-                                sourceChainTokenId: Buffer.from(R5[8]).toString(),
-                                targetChainTokenId: Buffer.from(R5[9]).toString(),
-                                sourceTxId: Buffer.from(R5[0]).toString(),
-                                fromChain: Buffer.from(R5[1]).toString(),
-                                fromAddress: Buffer.from(R5[3]).toString(),
-                                sourceBlockId: Buffer.from(R5[10]).toString(),
-                                WIDs: WIDs,
-                            })
-                        }
+                        const r4 = output.register_value(4);
+                        const r5 = output.register_value(5);
+                        try {
+                            if (r4 && r5) {
+                                const R5Serialized = r5.to_coll_coll_byte();
+                                const R4Serialized = r4.to_coll_coll_byte();
+                                if (output.tokens().len() > 0 &&
+                                    output.tokens().get(0).id().to_str() == this.RWT &&
+                                    R4Serialized.length >= 1 &&
+                                    R5Serialized.length >= 11 &&
+                                    output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
+                                    const WIDs = R4Serialized.map(byteArray => {
+                                        Buffer.from(byteArray).toString()
+                                    }).join(',');
+                                    boxes.push({
+                                        boxId: output.box_id().to_str(),
+                                        boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
+                                        toChain: Buffer.from(R5Serialized[2]).toString(),
+                                        toAddress: Buffer.from(R5Serialized[4]).toString(),
+                                        networkFee: Buffer.from(R5Serialized[7]).toString(),
+                                        bridgeFee: Buffer.from(R5Serialized[6]).toString(),
+                                        amount: Buffer.from(R5Serialized[5]).toString(),
+                                        sourceChainTokenId: Buffer.from(R5Serialized[8]).toString(),
+                                        targetChainTokenId: Buffer.from(R5Serialized[9]).toString(),
+                                        sourceTxId: Buffer.from(R5Serialized[0]).toString(),
+                                        fromChain: Buffer.from(R5Serialized[1]).toString(),
+                                        fromAddress: Buffer.from(R5Serialized[3]).toString(),
+                                        sourceBlockId: Buffer.from(R5Serialized[10]).toString(),
+                                        WIDs: WIDs,
+                                    })
+                                }
+                            }
 
+                        } catch {
+                            return;
+                        }
                     }
                 });
                 this.actions.storeEventTriggers(boxes, block, this.getId()).then(() => {

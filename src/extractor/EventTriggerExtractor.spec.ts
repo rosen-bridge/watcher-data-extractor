@@ -12,6 +12,10 @@ describe("EventTriggerExtractor", () => {
         dataSource = await loadDataBase();
     });
 
+    beforeEach(async () => {
+        await clearDB(dataSource);
+    })
+
     describe("getId", () => {
 
         /**
@@ -43,7 +47,6 @@ describe("EventTriggerExtractor", () => {
             const repository = dataSource.getRepository(EventTriggerEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(1);
-            await clearDB(dataSource);
         })
 
         /**
@@ -67,7 +70,6 @@ describe("EventTriggerExtractor", () => {
             const repository = dataSource.getRepository(EventTriggerEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
-            await clearDB(dataSource);
         })
     })
 

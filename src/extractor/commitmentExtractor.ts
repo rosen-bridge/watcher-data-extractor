@@ -45,19 +45,23 @@ export class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
                             output.tokens().get(0).id().to_str() === this.RWTId &&
                             this.commitmentsErgoTrees.indexOf(output.ergo_tree().to_base16_bytes()) !== -1
                         ) {
-                            const R4 = output.register_value(4);
-                            const R5 = output.register_value(5);
-                            const R6 = output.register_value(6);
-                            if (R4 && R5 && R6) {
-                                const WID = Buffer.from(R4.to_coll_coll_byte()[0]).toString("hex")
-                                const requestId = Buffer.from(R5.to_coll_coll_byte()[0]).toString("hex")
-                                const eventDigest = Buffer.from(R6.to_byte_array()).toString("hex")
-                                commitments.push({
-                                    WID: WID,
-                                    commitment: eventDigest,
-                                    eventId: requestId,
-                                    commitmentBoxId: output.box_id().to_str(),
-                                })
+                            try {
+                                const R4 = output.register_value(4);
+                                const R5 = output.register_value(5);
+                                const R6 = output.register_value(6);
+                                if (R4 && R5 && R6) {
+                                    const WID = Buffer.from(R4.to_coll_coll_byte()[0]).toString("hex")
+                                    const requestId = Buffer.from(R5.to_coll_coll_byte()[0]).toString("hex")
+                                    const eventDigest = Buffer.from(R6.to_byte_array()).toString("hex")
+                                    commitments.push({
+                                        WID: WID,
+                                        commitment: eventDigest,
+                                        eventId: requestId,
+                                        commitmentBoxId: output.box_id().to_str(),
+                                    })
+                                }
+                            } catch {
+                                return;
                             }
                         }
                     }

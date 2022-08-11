@@ -11,6 +11,10 @@ describe('permitExtractor', () => {
         dataSource = await loadDataBase();
     });
 
+    beforeEach(async () => {
+        await clearDB(dataSource);
+    })
+
     /**
      * getting id of the extractor tests
      * Dependency: Nothing
@@ -42,7 +46,6 @@ describe('permitExtractor', () => {
             const repository = dataSource.getRepository(PermitEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(3);
-            await clearDB(dataSource);
         })
 
         /**
@@ -62,7 +65,6 @@ describe('permitExtractor', () => {
             const repository = dataSource.getRepository(PermitEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
-            await clearDB(dataSource);
         })
 
     })
@@ -84,7 +86,6 @@ describe('permitExtractor', () => {
             const repository = dataSource.getRepository(PermitEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(0);
-            await clearDB(dataSource);
         });
     })
 

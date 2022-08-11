@@ -22,6 +22,10 @@ describe("PermitEntityAction", () => {
         dataSource = await loadDataBase();
     });
 
+    beforeEach(async () => {
+        await clearDB(dataSource);
+    })
+
     describe("storeBoxes", () => {
 
         /**
@@ -37,7 +41,6 @@ describe("PermitEntityAction", () => {
             const repository = dataSource.getRepository(PermitEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
-            await clearDB(dataSource);
         })
     })
 
@@ -60,7 +63,6 @@ describe("PermitEntityAction", () => {
             await permitEntity.deleteBlock('hash', 'extractor1');
             [_, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(1);
-            await clearDB(dataSource);
         })
     })
 })

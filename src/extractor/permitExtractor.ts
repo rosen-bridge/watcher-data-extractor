@@ -35,20 +35,25 @@ export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                 txs.forEach(transaction => {
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index);
-                        if (output.tokens().len() > 0 &&
-                            output.tokens().get(0).id().to_str() == this.RWT &&
-                            output.ergo_tree().to_base16_bytes() === this.permitErgoTree &&
-                            output.register_value(4) &&
-                            output.register_value(4)!.to_coll_coll_byte() &&
-                            output.register_value(4)!.to_coll_coll_byte().length >= 1
-                        ) {
-                            boxes.push({
-                                boxId: output.box_id().to_str(),
-                                boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
-                                WID: Buffer.from(output.register_value(4)!.to_coll_coll_byte()[0]).toString()
-                            })
+                        try {
+                            const r4 = output.register_value(4);
+                            if (r4) {
+                                const R4Serialized = r4.to_coll_coll_byte();
+                                if (output.tokens().len() > 0 &&
+                                    output.tokens().get(0).id().to_str() == this.RWT &&
+                                    output.ergo_tree().to_base16_bytes() === this.permitErgoTree &&
+                                    R4Serialized.length >= 1
+                                ) {
+                                    boxes.push({
+                                        boxId: output.box_id().to_str(),
+                                        boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
+                                        WID: Buffer.from(R4Serialized[0]).toString()
+                                    })
+                                }
+                            }
+                        } catch {
+                            return
                         }
-
                     }
                 });
                 this.actions.storePermits(boxes, block, this.getId()).then(() => {

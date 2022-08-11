@@ -25,6 +25,10 @@ describe('commitmentEntityAction', () => {
         dataSource = await loadDataBase();
     });
 
+    beforeEach(async () => {
+        await clearDB(dataSource);
+    })
+
     describe('storeCommitments', () => {
 
         /**
@@ -40,7 +44,6 @@ describe('commitmentEntityAction', () => {
             const repository = dataSource.getRepository(CommitmentEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
-            await clearDB(dataSource);
         })
     })
 
@@ -59,7 +62,6 @@ describe('commitmentEntityAction', () => {
             expect((await repository.findBy({spendBlock: 'hash'})).length).toBe(0);
             await commitmentEntity.spendCommitments(['boxId2', 'boxId10'], block);
             expect((await repository.findBy({commitmentBoxId: 'boxId2', spendBlock: 'hash'})).length).toBe(1);
-            await clearDB(dataSource);
         })
     })
 
@@ -81,7 +83,6 @@ describe('commitmentEntityAction', () => {
             await commitmentEntity.deleteBlockCommitment('hash', 'extractor1');
             [_, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(1);
-            await clearDB(dataSource);
         })
     })
 

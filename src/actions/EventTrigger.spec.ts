@@ -44,6 +44,11 @@ describe("EventTrigger", () => {
     beforeAll(async () => {
         dataSource = await loadDataBase();
     });
+
+    beforeEach(async () => {
+        await clearDB(dataSource);
+    })
+
     describe("storeBoxes", () => {
 
         /**
@@ -59,7 +64,6 @@ describe("EventTrigger", () => {
             const repository = dataSource.getRepository(EventTriggerEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
-            await clearDB(dataSource);
         })
     })
 
@@ -82,7 +86,6 @@ describe("EventTrigger", () => {
             [_, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(1);
             await dataSource.getRepository(EventTriggerEntity).createQueryBuilder().softDelete();
-            await clearDB(dataSource);
         })
     })
 })
