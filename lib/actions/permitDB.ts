@@ -47,7 +47,7 @@ class PermitEntityAction{
      * @param block
      * @param extractor
      */
-        //TODO: should check if deleted or not Promise<Boolean>
+    //TODO: should check if deleted or not Promise<Boolean>
     deleteBlock = async (block: string, extractor: string): Promise<void> => {
         await this.datasource.createQueryBuilder()
             .delete()
