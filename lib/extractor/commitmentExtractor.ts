@@ -1,10 +1,10 @@
 import * as wasm from 'ergo-lib-wasm-nodejs';
 import { extractedCommitment } from "../interfaces/extractedCommitment";
 import { DataSource } from "typeorm";
-import { CommitmentEntityAction } from "../actions/commitmentDB";
+import CommitmentEntityAction from "../actions/commitmentDB";
 import { AbstractExtractor, BlockEntity } from "@rosen-bridge/scanner";
 
-export class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
+class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
     id: string;
     private readonly dataSource: DataSource;
     private readonly commitmentsErgoTrees: Array<string>;
@@ -93,3 +93,5 @@ export class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
         await this.actions.deleteBlockCommitment(hash, this.getId());
     }
 }
+
+export default CommitmentExtractor;

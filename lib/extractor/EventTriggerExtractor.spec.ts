@@ -1,6 +1,6 @@
 import { clearDB, eventTriggerTxGenerator, loadDataBase } from "./utilsFunctions.mock";
-import { EventTriggerExtractor } from "./EventTriggerExtractor";
-import { EventTriggerEntity } from "../entities/EventTriggerEntity";
+import EventTriggerExtractor from "./EventTriggerExtractor";
+import EventTriggerEntity from "../entities/EventTriggerEntity";
 import { block, eventTriggerAddress, RWTId } from "./utilsVariable.mock";
 import { DataSource } from "typeorm";
 

@@ -1,9 +1,9 @@
 import { DataSource } from "typeorm";
 import { extractedCommitment } from "../interfaces/extractedCommitment";
-import { CommitmentEntity } from "../entities/CommitmentEntity";
+import CommitmentEntity from "../entities/CommitmentEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
 
-export class CommitmentEntityAction{
+class CommitmentEntityAction{
     private readonly datasource: DataSource;
 
     constructor(dataSource: DataSource) {
@@ -75,3 +75,5 @@ export class CommitmentEntityAction{
     }
 
 }
+
+export default CommitmentEntityAction;

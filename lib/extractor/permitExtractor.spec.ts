@@ -1,6 +1,6 @@
 import { clearDB, loadDataBase, permitTxGenerator } from "./utilsFunctions.mock";
-import { PermitExtractor } from "./permitExtractor";
-import { PermitEntity } from "../entities/PermitEntity";
+import PermitExtractor from "./permitExtractor";
+import PermitEntity from "../entities/PermitEntity";
 import { block, permitAddress, RWTId } from "./utilsVariable.mock";
 import { DataSource } from "typeorm";
 

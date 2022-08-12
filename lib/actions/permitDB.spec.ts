@@ -1,6 +1,6 @@
 import { clearDB, loadDataBase } from "../extractor/utilsFunctions.mock";
-import { PermitEntityAction } from "./permitDB";
-import { PermitEntity } from "../entities/PermitEntity";
+import PermitEntityAction from "./permitDB";
+import PermitEntity from "../entities/PermitEntity";
 import { block } from "../extractor/utilsVariable.mock";
 import { DataSource } from "typeorm";
 

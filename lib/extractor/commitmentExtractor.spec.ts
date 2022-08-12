@@ -2,9 +2,9 @@ import {
     clearDB,
     commitmentTxGenerator, loadDataBase,
 } from "./utilsFunctions.mock";
-import { PermitExtractor } from "./permitExtractor";
-import { CommitmentExtractor } from "./commitmentExtractor";
-import { CommitmentEntity } from "../entities/CommitmentEntity";
+import PermitExtractor from "./permitExtractor";
+import CommitmentExtractor from "./commitmentExtractor";
+import CommitmentEntity from "../entities/CommitmentEntity";
 import { block, commitmentAddress, permitAddress, RWTId } from "./utilsVariable.mock";
 import { DataSource } from "typeorm";
 

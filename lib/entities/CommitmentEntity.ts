@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name: "commitment_entity"})
-export class CommitmentEntity {
+@Entity()
+class CommitmentEntity{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -26,3 +26,5 @@ export class CommitmentEntity {
     @Column({nullable: true})
     spendBlock?: string;
 }
+
+export default CommitmentEntity;

@@ -1,8 +1,8 @@
 import { DataSource } from "typeorm";
 import { migrations } from "../migrations";
-import { PermitEntity } from "../entities/PermitEntity";
-import { CommitmentEntity } from "../entities/CommitmentEntity";
-import { EventTriggerEntity } from "../entities/EventTriggerEntity";
+import PermitEntity from "../entities/PermitEntity";
+import CommitmentEntity from "../entities/CommitmentEntity";
+import EventTriggerEntity from "../entities/EventTriggerEntity";
 import * as wasm from "ergo-lib-wasm-nodejs";
 import { commitmentAddress, eventTriggerAddress, last10BlockHeader, permitAddress, RWTId } from "./utilsVariable.mock";
 

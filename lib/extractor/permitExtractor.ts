@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
 import * as wasm from 'ergo-lib-wasm-nodejs';
-import { PermitEntityAction } from "../actions/permitDB";
+import PermitEntityAction from "../actions/permitDB";
 import { extractedPermit } from "../interfaces/extractedPermit";
 import { AbstractExtractor, BlockEntity } from "@rosen-bridge/scanner";
 
-export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
+class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
     id: string;
     private readonly dataSource: DataSource;
     private readonly actions: PermitEntityAction;
@@ -74,3 +74,5 @@ export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
         await this.actions.deleteBlock(hash, this.getId());
     }
 }
+
+export default PermitExtractor;

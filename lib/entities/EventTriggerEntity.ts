@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class EventTriggerEntity{
+class EventTriggerEntity{
     @PrimaryGeneratedColumn()
     id: number
 
@@ -54,3 +54,5 @@ export class EventTriggerEntity{
     WIDs: string
 
 }
+
+export default EventTriggerEntity;

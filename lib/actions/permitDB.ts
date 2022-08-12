@@ -1,9 +1,9 @@
 import { DataSource } from "typeorm";
 import { extractedPermit } from "../interfaces/extractedPermit";
-import { PermitEntity } from "../entities/PermitEntity";
+import PermitEntity from "../entities/PermitEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
 
-export class PermitEntityAction{
+class PermitEntityAction{
     private readonly datasource: DataSource;
 
     constructor(dataSource: DataSource) {
@@ -47,7 +47,7 @@ export class PermitEntityAction{
      * @param block
      * @param extractor
      */
-    //TODO: should check if deleted or not Promise<Boolean>
+        //TODO: should check if deleted or not Promise<Boolean>
     deleteBlock = async (block: string, extractor: string): Promise<void> => {
         await this.datasource.createQueryBuilder()
             .delete()
@@ -58,3 +58,5 @@ export class PermitEntityAction{
             }).execute()
     }
 }
+
+export default PermitEntityAction;

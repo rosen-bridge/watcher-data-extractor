@@ -1,10 +1,10 @@
 import { DataSource } from "typeorm";
 import * as wasm from 'ergo-lib-wasm-nodejs';
-import { EventTriggerDB } from "../actions/EventTriggerDB";
+import EventTriggerDB from "../actions/EventTriggerDB";
 import { AbstractExtractor, BlockEntity } from "@rosen-bridge/scanner";
 import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
 
-export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
+class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
     id: string;
     private readonly dataSource: DataSource;
     private readonly actions: EventTriggerDB;
@@ -42,7 +42,7 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                                 const R5Serialized = r5.to_coll_coll_byte();
                                 const R4Serialized = r4.to_coll_coll_byte();
                                 if (output.tokens().len() > 0 &&
-                                    output.tokens().get(0).id().to_str() == this.RWT &&
+                                    output.tokens().get(0).id().to_str() === this.RWT &&
                                     R4Serialized.length >= 1 &&
                                     R5Serialized.length >= 11 &&
                                     output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
@@ -92,3 +92,5 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
         await this.actions.deleteBlock(hash, this.getId());
     }
 }
+
+export default EventTriggerExtractor;

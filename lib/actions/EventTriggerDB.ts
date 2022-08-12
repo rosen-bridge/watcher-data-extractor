@@ -1,9 +1,9 @@
 import { DataSource } from "typeorm";
-import { EventTriggerEntity } from "../entities/EventTriggerEntity";
+import EventTriggerEntity from "../entities/EventTriggerEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
 import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
 
-export class EventTriggerDB{
+class EventTriggerDB{
     private readonly datasource: DataSource;
 
     constructor(dataSource: DataSource) {
@@ -69,3 +69,5 @@ export class EventTriggerDB{
     }
 
 }
+
+export default EventTriggerDB;

@@ -1,6 +1,6 @@
 import { clearDB, loadDataBase } from "../extractor/utilsFunctions.mock";
-import { CommitmentEntityAction } from "./commitmentDB";
-import { CommitmentEntity } from "../entities/CommitmentEntity";
+import CommitmentEntityAction from "./commitmentDB";
+import CommitmentEntity from "../entities/CommitmentEntity";
 import { block } from "../extractor/utilsVariable.mock";
 import { DataSource } from "typeorm";
 

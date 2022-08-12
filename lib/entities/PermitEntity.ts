@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class PermitEntity{
+class PermitEntity{
     @PrimaryGeneratedColumn()
     id: number
 
@@ -20,3 +20,5 @@ export class PermitEntity{
     @Column()
     blockId: string
 }
+
+export default PermitEntity;
