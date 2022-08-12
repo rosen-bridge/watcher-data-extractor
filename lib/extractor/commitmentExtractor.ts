@@ -61,7 +61,7 @@ export class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
                                     })
                                 }
                             } catch {
-                                return;
+                                continue
                             }
                         }
                     }

@@ -1,4 +1,4 @@
-export interface ExtractedEventTrigger{
+interface ExtractedEventTrigger{
     boxId: string,
     boxSerialized: string,
     fromChain: string,
@@ -14,3 +14,5 @@ export interface ExtractedEventTrigger{
     sourceTxId: string,
     WIDs: string,
 }
+
+export { ExtractedEventTrigger };

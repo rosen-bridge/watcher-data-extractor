@@ -52,7 +52,7 @@ export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                                 }
                             }
                         } catch {
-                            return
+                            continue
                         }
                     }
                 });
@@ -64,6 +64,7 @@ export class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                     reject(e)
                 })
             } catch (e) {
+                console.log(`block ${block} doesn't save in the database with error`, e);
                 reject(e);
             }
         });

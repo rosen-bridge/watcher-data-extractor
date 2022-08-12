@@ -35,9 +35,9 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                 txs.forEach(transaction => {
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index);
-                        const r4 = output.register_value(4);
-                        const r5 = output.register_value(5);
                         try {
+                            const r4 = output.register_value(4);
+                            const r5 = output.register_value(5);
                             if (r4 && r5) {
                                 const R5Serialized = r5.to_coll_coll_byte();
                                 const R4Serialized = r4.to_coll_coll_byte();
@@ -69,9 +69,10 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                             }
 
                         } catch {
-                            return;
+                            continue
                         }
                     }
+
                 });
                 this.actions.storeEventTriggers(boxes, block, this.getId()).then(() => {
                     resolve(true)
@@ -81,6 +82,7 @@ export class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                     reject(e)
                 })
             } catch (e) {
+                console.log(`block ${block} doesn't save in the database with error`, e)
                 reject(e);
             }
         });
