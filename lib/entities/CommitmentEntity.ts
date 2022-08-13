@@ -27,7 +27,7 @@ class CommitmentEntity{
     height: number
 
     @Column({nullable: true})
-    spendBlockHash?: string;
+    spendBlockHash!: string;
 
     @Column({nullable: true})
     spendBlockHeight?: number;

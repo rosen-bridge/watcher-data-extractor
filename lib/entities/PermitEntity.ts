@@ -24,7 +24,7 @@ class PermitEntity{
     height: number
 
     @Column({nullable: true})
-    spendBlockHash?: string;
+    spendBlockHash!: string;
 
     @Column({nullable: true})
     spendBlockHeight?: number;

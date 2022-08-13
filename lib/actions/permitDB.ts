@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import { extractedPermit } from "../interfaces/extractedPermit";
 import PermitEntity from "../entities/PermitEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
+import CommitmentEntity from "../entities/CommitmentEntity";
 
 class PermitEntityAction{
     private readonly datasource: DataSource;
@@ -72,6 +73,13 @@ class PermitEntityAction{
             .where("extractor = :extractor AND blockId = :block", {
                 "block": block,
                 "extractor": extractor
+            }).execute()
+        //TODO: should handled null value in spendBlockHeight
+        await this.datasource.createQueryBuilder()
+            .update(CommitmentEntity)
+            .set({spendBlockHash: undefined, spendBlockHeight: 0})
+            .where("spendBlockHash = :block AND blockId = :block", {
+                block: block
             }).execute()
     }
 }

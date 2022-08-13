@@ -73,10 +73,10 @@ class CommitmentEntityAction{
                 "block": block,
                 "extractor": extractor
             }).execute()
-        //TODO: should handled null value in update
+        //TODO: should handled null value in spendBlockHeight
         await this.datasource.createQueryBuilder()
             .update(CommitmentEntity)
-            .set({spendBlockHash: "", spendBlockHeight: 0})
+            .set({spendBlockHash: undefined, spendBlockHeight: 0})
             .where("spendBlockHash = :block AND blockId = :block", {
                 block: block
             }).execute()
