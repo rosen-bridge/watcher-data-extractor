@@ -48,7 +48,9 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "boxSerialized" varchar NOT NULL, 
                     "blockId" varchar NOT NULL,
                     "height" INTEGER NOT NULL, 
-                    "WID" varchar NOT NULL
+                    "WID" varchar NOT NULL,
+                    "spendBlockHash" varchar,
+                    "spendBlockHeight" INTEGER
                 )`
         );
     }

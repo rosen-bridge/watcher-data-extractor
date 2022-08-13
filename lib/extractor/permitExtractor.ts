@@ -32,6 +32,7 @@ class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
         return new Promise((resolve, reject) => {
             try {
                 const boxes: Array<extractedPermit> = [];
+                const spendIds: Array<string> = [];
                 txs.forEach(transaction => {
                     for (let index = 0; index < transaction.outputs().len(); index++) {
                         const output = transaction.outputs().get(index);
@@ -55,9 +56,17 @@ class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                             continue
                         }
                     }
+                    // process inputs
+                    for (let index = 0; index < transaction.inputs().len(); index++) {
+                        const input = transaction.inputs().get(index)
+                        spendIds.push(input.box_id().to_str())
+                    }
                 });
+
                 this.actions.storePermits(boxes, block, this.getId()).then(() => {
-                    resolve(true)
+                    this.actions.spendPermits(spendIds, block).then(() => {
+                        resolve(true);
+                    })
                 }).catch((e) => {
                     console.log(`Error in storing permits of the block ${block}`)
                     console.log(e);

@@ -44,6 +44,22 @@ class PermitEntityAction{
     }
 
     /**
+     * update spendBlock Column of the permits in the dataBase
+     * @param spendId
+     * @param block
+     */
+    spendPermits = async (spendId: Array<string>, block: BlockEntity): Promise<void> => {
+        //todo: should change with single db call
+        for (const id of spendId) {
+            await this.datasource.createQueryBuilder()
+                .update(PermitEntity)
+                .set({spendBlockHash: block.hash})
+                .where("boxId = :id", {id: id})
+                .execute()
+        }
+    }
+
+    /**
      * deleting all permits corresponding to the block(id) and extractor(id)
      * @param block
      * @param extractor
