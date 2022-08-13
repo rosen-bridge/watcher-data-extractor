@@ -25,6 +25,7 @@ class CommitmentEntityAction{
             row.WID = commitment.WID;
             row.extractor = extractorId;
             row.blockId = block.hash;
+            row.height = block.height;
             return row;
         });
         let success = true;
@@ -53,7 +54,7 @@ class CommitmentEntityAction{
         for (const id of spendId) {
             await this.datasource.createQueryBuilder()
                 .update(CommitmentEntity)
-                .set({spendBlock: block.hash})
+                .set({spendBlockHash: block.hash})
                 .where("commitmentBoxId = :id", {id: id})
                 .execute()
         }
@@ -71,6 +72,13 @@ class CommitmentEntityAction{
             .where("extractor = :extractor AND blockId = :block", {
                 "block": block,
                 "extractor": extractor
+            }).execute()
+        //TODO: should handled null value in spendBlockHeight
+        await this.datasource.createQueryBuilder()
+            .update(CommitmentEntity)
+            .set({spendBlockHash: undefined, spendBlockHeight: 0})
+            .where("spendBlockHash = :block AND blockId = :block", {
+                block: block
             }).execute()
     }
 

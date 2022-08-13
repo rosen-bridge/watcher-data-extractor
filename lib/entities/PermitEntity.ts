@@ -19,6 +19,15 @@ class PermitEntity{
 
     @Column()
     blockId: string
+
+    @Column()
+    height: number
+
+    @Column({nullable: true})
+    spendBlockHash!: string;
+
+    @Column({nullable: true})
+    spendBlockHeight?: number;
 }
 
 export default PermitEntity;

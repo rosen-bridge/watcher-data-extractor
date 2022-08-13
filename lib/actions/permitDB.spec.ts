@@ -26,7 +26,7 @@ describe("PermitEntityAction", () => {
         await clearDB(dataSource);
     })
 
-    describe("storeBoxes", () => {
+    describe("storePermits", () => {
 
         /**
          * 2 valid PermitBox should save successfully
@@ -41,6 +41,18 @@ describe("PermitEntityAction", () => {
             const repository = dataSource.getRepository(PermitEntity);
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
+        })
+    })
+
+    describe("spendPermits", () => {
+        it('sets one spendBlock for one permit & one row should have spendBlock', async () => {
+            const permitEntity = new PermitEntityAction(dataSource);
+            const res = await permitEntity.storePermits([sampleBox1, sampleBox2], block, 'extractor1');
+            expect(res).toBe(true);
+            const repository = dataSource.getRepository(PermitEntity);
+            expect((await repository.findBy({spendBlockHash: 'hash'})).length).toBe(0);
+            await permitEntity.spendPermits(['1', 'boxId10'], block);
+            expect((await repository.findBy({boxId: '1', spendBlockHash: 'hash'})).length).toBe(1);
         })
     })
 

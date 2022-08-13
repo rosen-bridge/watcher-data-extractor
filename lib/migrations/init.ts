@@ -13,7 +13,9 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "WID" varchar NOT NULL, 
                     "commitmentBoxId" varchar NOT NULL, 
                     "blockId" varchar NOT NULL, 
-                    "spendBlock" varchar
+                    "height" INTEGER NOT NULL, 
+                    "spendBlockHash" varchar,
+                    "spendBlockHeight" INTEGER
                 )`
         );
         await queryRunner.query(
@@ -34,6 +36,7 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "targetChainTokenId" varchar NOT NULL,
                     "sourceBlockId" varchar NOT NULL,
                     "sourceTxId" varchar NOT NULL,
+                    "height" INTEGER NOT NULL, 
                     "WIDs" varchar NOT NULL
                 )`
         );
@@ -44,7 +47,10 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "boxId" varchar NOT NULL, 
                     "boxSerialized" varchar NOT NULL, 
                     "blockId" varchar NOT NULL,
-                    "WID" varchar NOT NULL
+                    "height" INTEGER NOT NULL, 
+                    "WID" varchar NOT NULL,
+                    "spendBlockHash" varchar,
+                    "spendBlockHeight" INTEGER
                 )`
         );
     }
