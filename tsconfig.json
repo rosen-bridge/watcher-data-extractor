@@ -9,7 +9,7 @@
     "emitDecoratorMetadata": true,
     "declaration": true,
     "moduleResolution": "Node",
-    "module": "nodenext",
+    "module": "esnext",
     "rootDir": "./lib",
     "resolveJsonModule": true,
     "allowJs": false,

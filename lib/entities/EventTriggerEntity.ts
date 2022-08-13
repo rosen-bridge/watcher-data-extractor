@@ -18,6 +18,9 @@ class EventTriggerEntity{
     blockId: string
 
     @Column()
+    height: number
+
+    @Column()
     fromChain: string
 
     @Column()

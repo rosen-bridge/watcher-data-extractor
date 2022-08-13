@@ -22,6 +22,7 @@ class PermitEntityAction{
             row.boxId = permit.boxId;
             row.boxSerialized = permit.boxSerialized;
             row.blockId = block.hash;
+            row.height = block.height;
             row.extractor = extractor;
             row.WID = permit.WID;
             return row;

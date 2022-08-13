@@ -22,6 +22,7 @@ class EventTriggerDB{
             row.boxId = event.boxId;
             row.boxSerialized = event.boxSerialized;
             row.blockId = block.hash;
+            row.height = block.height;
             row.extractor = extractor;
             row.WIDs = event.WIDs;
             row.amount = event.amount;

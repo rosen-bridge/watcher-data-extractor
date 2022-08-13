@@ -19,6 +19,9 @@ class PermitEntity{
 
     @Column()
     blockId: string
+
+    @Column()
+    height: number
 }
 
 export default PermitEntity;

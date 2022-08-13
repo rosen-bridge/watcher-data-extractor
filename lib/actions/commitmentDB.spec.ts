@@ -59,9 +59,9 @@ describe('commitmentEntityAction', () => {
             const res = await commitmentEntity.storeCommitments([commitment1, commitment2], block, 'extractor1');
             expect(res).toBe(true);
             const repository = dataSource.getRepository(CommitmentEntity);
-            expect((await repository.findBy({spendBlock: 'hash'})).length).toBe(0);
+            expect((await repository.findBy({spendBlockHash: 'hash'})).length).toBe(0);
             await commitmentEntity.spendCommitments(['boxId2', 'boxId10'], block);
-            expect((await repository.findBy({commitmentBoxId: 'boxId2', spendBlock: 'hash'})).length).toBe(1);
+            expect((await repository.findBy({commitmentBoxId: 'boxId2', spendBlockHash: 'hash'})).length).toBe(1);
         })
     })
 

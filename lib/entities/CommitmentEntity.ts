@@ -23,8 +23,14 @@ class CommitmentEntity{
     @Column()
     blockId: string;
 
+    @Column()
+    height: number
+
     @Column({nullable: true})
-    spendBlock?: string;
+    spendBlockHash?: string;
+
+    @Column({nullable: true})
+    spendBlockHeight?: number;
 }
 
 export default CommitmentEntity;
