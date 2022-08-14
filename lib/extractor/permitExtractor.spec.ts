@@ -44,8 +44,14 @@ describe('permitExtractor', () => {
             const res = await extractor.processTransactions([tx1, tx2, tx3], block);
             expect(res).toBeTruthy();
             const repository = dataSource.getRepository(PermitEntity);
-            const permit1 = (await repository.find({where: {WID: 'ff11'}}))[0];
+            const [rows, rowsCount] = await repository.findAndCount();
+            expect(rowsCount).toBe(3);
+            const permit1 = rows[0];
+            const permit2 = rows[1];
+            const permit3 = rows[2];
             const box1 = tx1.outputs().get(0);
+            const box2 = tx2.outputs().get(0);
+            const box3 = tx3.outputs().get(0);
             expect(permit1).toEqual({
                 id: 1,
                 WID: 'ff11',
@@ -56,9 +62,29 @@ describe('permitExtractor', () => {
                 height: 10,
                 spendBlockHash: null,
                 spendBlockHeight: null,
-            })
-            const [_, rowsCount] = await repository.findAndCount();
-            expect(rowsCount).toBe(3);
+            });
+            expect(permit2).toEqual({
+                id: 2,
+                WID: 'ff22',
+                extractor: 'extractorId',
+                boxId: box2.box_id().to_str(),
+                boxSerialized: Buffer.from(box2.sigma_serialize_bytes()).toString("base64"),
+                blockId: 'hash',
+                height: 10,
+                spendBlockHash: null,
+                spendBlockHeight: null,
+            });
+            expect(permit3).toEqual({
+                id: 3,
+                WID: 'ff33',
+                extractor: 'extractorId',
+                boxId: box3.box_id().to_str(),
+                boxSerialized: Buffer.from(box3.sigma_serialize_bytes()).toString("base64"),
+                blockId: 'hash',
+                height: 10,
+                spendBlockHash: null,
+                spendBlockHeight: null,
+            });
         })
 
         /**

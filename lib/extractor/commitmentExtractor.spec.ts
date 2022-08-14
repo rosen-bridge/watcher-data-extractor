@@ -49,10 +49,10 @@ describe('CommitmentExtractor', () => {
             const res = await extractor.processTransactions([tx1, tx3, tx2], block);
             expect(res).toBeTruthy();
             const repository = dataSource.getRepository(CommitmentEntity);
-            const [, rowsCount] = await repository.findAndCount();
+            const [rows, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
-            const commitment1 = (await repository.find({where: {commitment: 'd1'}}))[0]
-            const commitment2 = (await repository.find({where: {commitment: 'd2'}}))[0]
+            const commitment1 = rows[0]
+            const commitment2 = rows[1]
             const box1 = tx1.outputs().get(0);
             const box2 = tx2.outputs().get(0);
             expect(commitment1).toEqual({
