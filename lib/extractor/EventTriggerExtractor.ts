@@ -46,23 +46,23 @@ class EventTriggerExtractor extends AbstractExtractor<wasm.Transaction>{
                                     R4Serialized.length >= 1 &&
                                     R5Serialized.length >= 11 &&
                                     output.ergo_tree().to_base16_bytes() === this.eventTriggerErgoTree) {
-                                    const WIDs = R4Serialized.map(byteArray => {
-                                        Buffer.from(byteArray).toString()
-                                    }).join(',');
+                                    const WIDs = R4Serialized.map(byteArray =>
+                                        Buffer.from(byteArray).toString("hex")
+                                    ).join(',');
                                     boxes.push({
                                         boxId: output.box_id().to_str(),
                                         boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
                                         toChain: Buffer.from(R5Serialized[2]).toString(),
                                         toAddress: Buffer.from(R5Serialized[4]).toString(),
-                                        networkFee: Buffer.from(R5Serialized[7]).toString(),
-                                        bridgeFee: Buffer.from(R5Serialized[6]).toString(),
-                                        amount: Buffer.from(R5Serialized[5]).toString(),
-                                        sourceChainTokenId: Buffer.from(R5Serialized[8]).toString(),
-                                        targetChainTokenId: Buffer.from(R5Serialized[9]).toString(),
-                                        sourceTxId: Buffer.from(R5Serialized[0]).toString(),
+                                        networkFee: Buffer.from(R5Serialized[7]).toString("hex"),
+                                        bridgeFee: Buffer.from(R5Serialized[6]).toString("hex"),
+                                        amount: Buffer.from(R5Serialized[5]).toString("hex"),
+                                        sourceChainTokenId: Buffer.from(R5Serialized[8]).toString("hex"),
+                                        targetChainTokenId: Buffer.from(R5Serialized[9]).toString("hex"),
+                                        sourceTxId: Buffer.from(R5Serialized[0]).toString("hex"),
                                         fromChain: Buffer.from(R5Serialized[1]).toString(),
                                         fromAddress: Buffer.from(R5Serialized[3]).toString(),
-                                        sourceBlockId: Buffer.from(R5Serialized[10]).toString(),
+                                        sourceBlockId: Buffer.from(R5Serialized[10]).toString("hex"),
                                         WIDs: WIDs,
                                     })
                                 }

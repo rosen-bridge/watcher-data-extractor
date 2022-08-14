@@ -38,13 +38,26 @@ describe('permitExtractor', () => {
          */
         it("should save 3 permits", async () => {
             const extractor = new PermitExtractor("extractorId", dataSource, permitAddress, RWTId);
-            const tx1 = permitTxGenerator(true, 'wid1');
-            const tx2 = permitTxGenerator(true, 'wid2');
-            const tx3 = permitTxGenerator(true, 'wid3');
+            const tx1 = permitTxGenerator(true, 'ff11');
+            const tx2 = permitTxGenerator(true, 'ff22');
+            const tx3 = permitTxGenerator(true, 'ff33');
             const res = await extractor.processTransactions([tx1, tx2, tx3], block);
             expect(res).toBeTruthy();
             const repository = dataSource.getRepository(PermitEntity);
-            const [, rowsCount] = await repository.findAndCount();
+            const permit1 = (await repository.find({where: {WID: 'ff11'}}))[0];
+            const box1 = tx1.outputs().get(0);
+            expect(permit1).toEqual({
+                id: 1,
+                WID: 'ff11',
+                extractor: 'extractorId',
+                boxId: box1.box_id().to_str(),
+                boxSerialized: Buffer.from(box1.sigma_serialize_bytes()).toString("base64"),
+                blockId: 'hash',
+                height: 10,
+                spendBlockHash: null,
+                spendBlockHeight: null,
+            })
+            const [_, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(3);
         })
 

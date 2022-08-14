@@ -5,7 +5,7 @@ import { block, eventTriggerAddress, RWTId } from "./utilsVariable.mock";
 import { DataSource } from "typeorm";
 
 let dataSource: DataSource;
-const sampleEventData = ['txid1', 'ergo', 'cardano', 'addr1', 'cardanoAddr2', '1000', '10', '1', 'token1', 'asset1', 'blockId'];
+const sampleEventData = ['f1', 'ergo', 'cardano', 'addr1', 'cardanoAddr2', '11', '22', '33', 'a1', 'a2', 'b1'];
 
 describe("EventTriggerExtractor", () => {
     beforeAll(async () => {
@@ -41,31 +41,31 @@ describe("EventTriggerExtractor", () => {
          */
         it('should save one eventTrigger successfully', async () => {
             const extractor = new EventTriggerExtractor('extractorId', dataSource, eventTriggerAddress, RWTId);
-            const tx1 = eventTriggerTxGenerator(true, ['wid1'], sampleEventData);
+            const tx1 = eventTriggerTxGenerator(true, ['ff'], sampleEventData);
             const res = await extractor.processTransactions([tx1], block);
             expect(res).toBeTruthy();
             const repository = dataSource.getRepository(EventTriggerEntity);
             const [event, rowsCount] = await repository.findAndCount();
-            const box=tx1.outputs().get(0);
+            const box = tx1.outputs().get(0);
             expect(event[0]).toEqual({
-                id:1,
-                extractor:'extractorId',
-                boxId:box.box_id().to_str(),
-                boxSerialized:Buffer.from(box.sigma_serialize_bytes()).toString("base64"),
-                blockId:'hash',
-                height:10,
-                fromChain:
-                toChain:
-                fromAddress:
-                amount:
-                bridgeFee:
-                networkFee:
-                sourceChainTokenId:
-                targetChainTokenId:
-                sourceTxId:
-                sourceBlockId:
-                WIDs:
-
+                id: 1,
+                extractor: 'extractorId',
+                boxId: box.box_id().to_str(),
+                boxSerialized: Buffer.from(box.sigma_serialize_bytes()).toString("base64"),
+                blockId: 'hash',
+                height: 10,
+                toAddress: 'cardanoAddr2',
+                fromChain: sampleEventData[1],
+                toChain: sampleEventData[2],
+                fromAddress: sampleEventData[3],
+                amount: sampleEventData[5],
+                bridgeFee: sampleEventData[6],
+                networkFee: sampleEventData[7],
+                sourceChainTokenId: sampleEventData[8],
+                targetChainTokenId: sampleEventData[9],
+                sourceTxId: sampleEventData[0],
+                sourceBlockId: sampleEventData[10],
+                WIDs: 'ff'
             })
             expect(rowsCount).toBe(1);
         })
