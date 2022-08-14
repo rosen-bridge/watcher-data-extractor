@@ -45,7 +45,28 @@ describe("EventTriggerExtractor", () => {
             const res = await extractor.processTransactions([tx1], block);
             expect(res).toBeTruthy();
             const repository = dataSource.getRepository(EventTriggerEntity);
-            const [, rowsCount] = await repository.findAndCount();
+            const [event, rowsCount] = await repository.findAndCount();
+            const box=tx1.outputs().get(0);
+            expect(event[0]).toEqual({
+                id:1,
+                extractor:'extractorId',
+                boxId:box.box_id().to_str(),
+                boxSerialized:Buffer.from(box.sigma_serialize_bytes()).toString("base64"),
+                blockId:'hash',
+                height:10,
+                fromChain:
+                toChain:
+                fromAddress:
+                amount:
+                bridgeFee:
+                networkFee:
+                sourceChainTokenId:
+                targetChainTokenId:
+                sourceTxId:
+                sourceBlockId:
+                WIDs:
+
+            })
             expect(rowsCount).toBe(1);
         })
 

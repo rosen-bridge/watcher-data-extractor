@@ -141,21 +141,21 @@ export const commitmentTxGenerator = (
     }
 
     const R4Value = WID.map((val) => {
-        return new Uint8Array(Buffer.from(val))
+        return new Uint8Array(Buffer.from(val, 'hex'))
     });
     outBoxBuilder.set_register_value(4, wasm.Constant.from_coll_coll_byte(
         R4Value
     ));
 
     const R5Value = requestId.map((val) => {
-        return new Uint8Array(Buffer.from(val))
+        return new Uint8Array(Buffer.from(val, 'hex'))
     });
     outBoxBuilder.set_register_value(5, wasm.Constant.from_coll_coll_byte(
         R5Value
     ));
 
     outBoxBuilder.set_register_value(6, wasm.Constant.from_byte_array(
-        new Uint8Array(Buffer.from(eventDigest))
+        new Uint8Array(Buffer.from(eventDigest, 'hex'))
     ));
 
 

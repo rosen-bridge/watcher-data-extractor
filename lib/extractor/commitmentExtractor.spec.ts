@@ -43,12 +43,42 @@ describe('CommitmentExtractor', () => {
          */
         it('should save 2 commitments', async () => {
             const extractor = new CommitmentExtractor('extractorId', [commitmentAddress], RWTId, dataSource);
-            const tx1 = commitmentTxGenerator(true, ['wid1'], ['1'], 'digest1');
-            const tx2 = commitmentTxGenerator(true, ['wid2'], ['2'], 'digest2');
-            const tx3 = commitmentTxGenerator(false, ['wid2'], ['2'], 'digest2');
+            const tx1 = commitmentTxGenerator(true, ['f1'], ['11'], 'd1');
+            const tx2 = commitmentTxGenerator(true, ['f2'], ['22'], 'd2');
+            const tx3 = commitmentTxGenerator(false, ['f3'], ['33'], 'd3');
             const res = await extractor.processTransactions([tx1, tx3, tx2], block);
             expect(res).toBeTruthy();
             const repository = dataSource.getRepository(CommitmentEntity);
+            const commitment1 = (await repository.find({where: {commitment: 'd1'}}))[0]
+            const commitment2 = (await repository.find({where: {commitment: 'd2'}}))[0]
+            const box1 = tx1.outputs().get(0);
+            const box2 = tx2.outputs().get(0);
+            expect(commitment1).toEqual({
+                id: 1,
+                WID: 'f1',
+                commitment: 'd1',
+                eventId: '11',
+                commitmentBoxId: box1.box_id().to_str(),
+                boxSerialized: Buffer.from(box1.sigma_serialize_bytes()).toString("base64"),
+                extractor: 'extractorId',
+                blockId: 'hash',
+                height: 10,
+                spendBlockHash: null,
+                spendBlockHeight: null,
+            });
+            expect(commitment2).toEqual({
+                id: 2,
+                WID: 'f2',
+                commitment: 'd2',
+                eventId: '22',
+                commitmentBoxId: box2.box_id().to_str(),
+                boxSerialized: Buffer.from(box2.sigma_serialize_bytes()).toString("base64"),
+                extractor: 'extractorId',
+                blockId: 'hash',
+                height: 10,
+                spendBlockHash: null,
+                spendBlockHeight: null,
+            });
             const [, rowsCount] = await repository.findAndCount();
             expect(rowsCount).toBe(2);
         })
