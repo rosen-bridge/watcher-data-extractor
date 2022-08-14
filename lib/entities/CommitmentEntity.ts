@@ -26,6 +26,9 @@ class CommitmentEntity{
     @Column()
     height: number
 
+    @Column()
+    boxSerialized: string;
+
     @Column({nullable: true})
     spendBlockHash!: string;
 

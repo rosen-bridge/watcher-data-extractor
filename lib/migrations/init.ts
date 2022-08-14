@@ -8,7 +8,8 @@ export class initMigration1659787165000 implements MigrationInterface{
             `CREATE TABLE "commitment_entity" 
                     ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, 
                     "extractor" varchar NOT NULL, 
-                    "eventId" varchar NOT NULL, 
+                    "eventId" varchar NOT NULL,
+                    "boxSerialized" varchar NOT NULL, 
                     "commitment" varchar NOT NULL, 
                     "WID" varchar NOT NULL, 
                     "commitmentBoxId" varchar NOT NULL, 

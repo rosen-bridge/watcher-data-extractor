@@ -58,6 +58,7 @@ class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
                                         commitment: eventDigest,
                                         eventId: requestId,
                                         commitmentBoxId: output.box_id().to_str(),
+                                        boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64")
                                     })
                                 }
                             } catch {

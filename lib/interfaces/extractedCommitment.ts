@@ -3,6 +3,7 @@ interface extractedCommitment{
     commitment: string;
     eventId: string;
     commitmentBoxId: string;
+    boxSerialized: string;
 }
 
 export { extractedCommitment };
