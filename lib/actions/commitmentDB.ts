@@ -26,6 +26,7 @@ class CommitmentEntityAction{
             row.extractor = extractorId;
             row.blockId = block.hash;
             row.height = block.height;
+            row.boxSerialized = commitment.boxSerialized;
             return row;
         });
         let success = true;

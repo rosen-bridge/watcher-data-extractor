@@ -48,7 +48,7 @@ class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                                     boxes.push({
                                         boxId: output.box_id().to_str(),
                                         boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64"),
-                                        WID: Buffer.from(R4Serialized[0]).toString()
+                                        WID: Buffer.from(R4Serialized[0]).toString('hex')
                                     })
                                 }
                             }

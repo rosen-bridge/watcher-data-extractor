@@ -9,6 +9,7 @@ const commitment1 = {
     commitment: "commitment1",
     eventId: "eventId1",
     commitmentBoxId: "boxId1",
+    boxSerialized: "box1"
 }
 
 const commitment2 = {
@@ -16,6 +17,7 @@ const commitment2 = {
     commitment: "commitment2",
     eventId: "eventId2",
     commitmentBoxId: "boxId2",
+    boxSerialized: "box2"
 }
 
 let dataSource: DataSource;

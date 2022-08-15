@@ -66,7 +66,7 @@ export const permitTxGenerator = (
     }
 
     outBoxBuilder.set_register_value(4, wasm.Constant.from_coll_coll_byte(
-        [new Uint8Array(Buffer.from(WID))]
+        [new Uint8Array(Buffer.from(WID, 'hex'))]
     ));
 
     const outBox = outBoxBuilder.build();
@@ -141,21 +141,21 @@ export const commitmentTxGenerator = (
     }
 
     const R4Value = WID.map((val) => {
-        return new Uint8Array(Buffer.from(val))
+        return new Uint8Array(Buffer.from(val, 'hex'))
     });
     outBoxBuilder.set_register_value(4, wasm.Constant.from_coll_coll_byte(
         R4Value
     ));
 
     const R5Value = requestId.map((val) => {
-        return new Uint8Array(Buffer.from(val))
+        return new Uint8Array(Buffer.from(val, 'hex'))
     });
     outBoxBuilder.set_register_value(5, wasm.Constant.from_coll_coll_byte(
         R5Value
     ));
 
     outBoxBuilder.set_register_value(6, wasm.Constant.from_byte_array(
-        new Uint8Array(Buffer.from(eventDigest))
+        new Uint8Array(Buffer.from(eventDigest, 'hex'))
     ));
 
 
@@ -229,19 +229,22 @@ export const eventTriggerTxGenerator = (
     }
 
     const R4Value = WID.map((val) => {
-        return new Uint8Array(Buffer.from(val))
+        return new Uint8Array(Buffer.from(val, 'hex'))
     });
     outBoxBuilder.set_register_value(4, wasm.Constant.from_coll_coll_byte(
         R4Value
     ));
-
-    const R5Value = eventData.map((val) => {
-        return new Uint8Array(Buffer.from(val))
-    });
+    const R5Value: Array<Uint8Array> = [];
+    for (let i = 0; i < eventData.length; i++) {
+        if ([0, 5, 6, 7, 8, 9, 10].includes(i)) {
+            R5Value.push(new Uint8Array(Buffer.from(eventData[i], 'hex')))
+        } else {
+            R5Value.push(new Uint8Array(Buffer.from(eventData[i])))
+        }
+    }
     outBoxBuilder.set_register_value(5, wasm.Constant.from_coll_coll_byte(
         R5Value
     ));
-
 
     const outBox = outBoxBuilder.build();
     const tokens = new wasm.Tokens();
