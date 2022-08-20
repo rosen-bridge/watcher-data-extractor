@@ -65,8 +65,8 @@ describe('CommitmentExtractor', () => {
                 extractor: 'extractorId',
                 blockId: 'hash',
                 height: 10,
-                spendBlockHash: null,
-                spendBlockHeight: null,
+                spendBlock: null,
+                spendHeight: null,
             });
             expect(commitment2).toEqual({
                 id: 2,
@@ -78,8 +78,8 @@ describe('CommitmentExtractor', () => {
                 extractor: 'extractorId',
                 blockId: 'hash',
                 height: 10,
-                spendBlockHash: null,
-                spendBlockHeight: null,
+                spendBlock: null,
+                spendHeight: null,
             });
         })
     })

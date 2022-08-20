@@ -50,9 +50,9 @@ describe("PermitEntityAction", () => {
             const res = await permitEntity.storePermits([sampleBox1, sampleBox2], block, 'extractor1');
             expect(res).toBe(true);
             const repository = dataSource.getRepository(PermitEntity);
-            expect((await repository.findBy({spendBlockHash: 'hash'})).length).toBe(0);
+            expect((await repository.findBy({spendBlock: 'hash'})).length).toBe(0);
             await permitEntity.spendPermits(['1', 'boxId10'], block);
-            expect((await repository.findBy({boxId: '1', spendBlockHash: 'hash'})).length).toBe(1);
+            expect((await repository.findBy({boxId: '1', spendBlock: 'hash'})).length).toBe(1);
         })
     })
 

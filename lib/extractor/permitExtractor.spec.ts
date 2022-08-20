@@ -60,8 +60,8 @@ describe('permitExtractor', () => {
                 boxSerialized: Buffer.from(box1.sigma_serialize_bytes()).toString("base64"),
                 blockId: 'hash',
                 height: 10,
-                spendBlockHash: null,
-                spendBlockHeight: null,
+                spendBlock: null,
+                spendHeight: null,
             });
             expect(permit2).toEqual({
                 id: 2,
@@ -71,8 +71,8 @@ describe('permitExtractor', () => {
                 boxSerialized: Buffer.from(box2.sigma_serialize_bytes()).toString("base64"),
                 blockId: 'hash',
                 height: 10,
-                spendBlockHash: null,
-                spendBlockHeight: null,
+                spendBlock: null,
+                spendHeight: null,
             });
             expect(permit3).toEqual({
                 id: 3,
@@ -82,8 +82,8 @@ describe('permitExtractor', () => {
                 boxSerialized: Buffer.from(box3.sigma_serialize_bytes()).toString("base64"),
                 blockId: 'hash',
                 height: 10,
-                spendBlockHash: null,
-                spendBlockHeight: null,
+                spendBlock: null,
+                spendHeight: null,
             });
         })
 

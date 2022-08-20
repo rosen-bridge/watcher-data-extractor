@@ -15,8 +15,8 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "commitmentBoxId" varchar NOT NULL, 
                     "blockId" varchar NOT NULL, 
                     "height" INTEGER NOT NULL, 
-                    "spendBlockHash" varchar,
-                    "spendBlockHeight" INTEGER
+                    "spendBlock" varchar,
+                    "spendHeight" INTEGER
                 )`
         );
         await queryRunner.query(
@@ -50,8 +50,8 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "blockId" varchar NOT NULL,
                     "height" INTEGER NOT NULL, 
                     "WID" varchar NOT NULL,
-                    "spendBlockHash" varchar,
-                    "spendBlockHeight" INTEGER
+                    "spendBlock" varchar,
+                    "spendHeight" INTEGER
                 )`
         );
     }

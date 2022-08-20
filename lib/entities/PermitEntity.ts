@@ -24,10 +24,10 @@ class PermitEntity{
     height: number
 
     @Column({nullable: true})
-    spendBlockHash!: string;
+    spendBlock!: string;
 
     @Column({nullable: true})
-    spendBlockHeight?: number;
+    spendHeight?: number;
 }
 
 export default PermitEntity;

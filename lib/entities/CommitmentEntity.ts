@@ -30,10 +30,10 @@ class CommitmentEntity{
     boxSerialized: string;
 
     @Column({nullable: true})
-    spendBlockHash!: string;
+    spendBlock!: string;
 
     @Column({nullable: true})
-    spendBlockHeight?: number;
+    spendHeight?: number;
 }
 
 export default CommitmentEntity;

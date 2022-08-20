@@ -55,7 +55,7 @@ class CommitmentEntityAction{
         for (const id of spendId) {
             await this.datasource.createQueryBuilder()
                 .update(CommitmentEntity)
-                .set({spendBlockHash: block.hash})
+                .set({spendBlock: block.hash, spendHeight: block.height})
                 .where("commitmentBoxId = :id", {id: id})
                 .execute()
         }
@@ -77,8 +77,8 @@ class CommitmentEntityAction{
         //TODO: should handled null value in spendBlockHeight
         await this.datasource.createQueryBuilder()
             .update(CommitmentEntity)
-            .set({spendBlockHash: undefined, spendBlockHeight: 0})
-            .where("spendBlockHash = :block AND blockId = :block", {
+            .set({spendBlock: undefined, spendHeight: 0})
+            .where("spendBlock = :block AND blockId = :block", {
                 block: block
             }).execute()
     }

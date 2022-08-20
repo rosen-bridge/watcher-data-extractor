@@ -236,7 +236,7 @@ export const eventTriggerTxGenerator = (
     ));
     const R5Value: Array<Uint8Array> = [];
     for (let i = 0; i < eventData.length; i++) {
-        if ([0, 5, 6, 7, 8, 9, 10].includes(i)) {
+        if ([5, 6, 7].includes(i)) {
             R5Value.push(new Uint8Array(Buffer.from(eventData[i], 'hex')))
         } else {
             R5Value.push(new Uint8Array(Buffer.from(eventData[i])))
