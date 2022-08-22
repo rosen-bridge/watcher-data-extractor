@@ -12,11 +12,12 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "boxSerialized" varchar NOT NULL, 
                     "commitment" varchar NOT NULL, 
                     "WID" varchar NOT NULL, 
-                    "commitmentBoxId" varchar NOT NULL, 
-                    "blockId" varchar NOT NULL, 
+                    "boxId" varchar NOT NULL, 
+                    "block" varchar NOT NULL, 
                     "height" INTEGER NOT NULL, 
                     "spendBlock" varchar,
-                    "spendHeight" INTEGER
+                    "spendHeight" INTEGER,
+                    CONSTRAINT "UQ_cc294fc304a66f8f194840f1ece" UNIQUE ("boxId", "extractor")
                 )`
         );
         await queryRunner.query(
@@ -25,7 +26,7 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "extractor" varchar NOT NULL, 
                     "boxId" varchar NOT NULL, 
                     "boxSerialized" varchar NOT NULL, 
-                    "blockId" varchar NOT NULL,
+                    "block" varchar NOT NULL,
                     "fromChain" varchar NOT NULL,
                     "toChain" varchar NOT NULL,
                     "fromAddress" varchar NOT NULL,
@@ -38,7 +39,8 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "sourceBlockId" varchar NOT NULL,
                     "sourceTxId" varchar NOT NULL,
                     "height" INTEGER NOT NULL, 
-                    "WIDs" varchar NOT NULL
+                    "WIDs" varchar NOT NULL,
+                    CONSTRAINT "UQ_c905f221a1b6271ca4405dbbe5f" UNIQUE ("boxId", "extractor")
                 )`
         );
         await queryRunner.query(
@@ -47,11 +49,12 @@ export class initMigration1659787165000 implements MigrationInterface{
                     "extractor" varchar NOT NULL, 
                     "boxId" varchar NOT NULL, 
                     "boxSerialized" varchar NOT NULL, 
-                    "blockId" varchar NOT NULL,
+                    "block" varchar NOT NULL,
                     "height" INTEGER NOT NULL, 
                     "WID" varchar NOT NULL,
                     "spendBlock" varchar,
-                    "spendHeight" INTEGER
+                    "spendHeight" INTEGER,
+                     CONSTRAINT "UQ_d3226602b909b64bcaeadc39c3c" UNIQUE ("boxId", "extractor")
                 )`
         );
     }

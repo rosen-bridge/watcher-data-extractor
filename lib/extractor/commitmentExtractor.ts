@@ -57,7 +57,7 @@ class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
                                         WID: WID,
                                         commitment: eventDigest,
                                         eventId: requestId,
-                                        commitmentBoxId: output.box_id().to_str(),
+                                        boxId: output.box_id().to_str(),
                                         boxSerialized: Buffer.from(output.sigma_serialize_bytes()).toString("base64")
                                     })
                                 }
@@ -74,7 +74,7 @@ class CommitmentExtractor extends AbstractExtractor<wasm.Transaction>{
                 })
                 // process save commitments
                 this.actions.storeCommitments(commitments, block, this.id).then(() => {
-                    this.actions.spendCommitments(spendIds, block).then(() => {
+                    this.actions.spendCommitments(spendIds, block, this.id).then(() => {
                         resolve(true)
                     })
                 }).catch((e) => reject(e))

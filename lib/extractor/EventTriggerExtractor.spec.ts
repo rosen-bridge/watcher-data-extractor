@@ -52,7 +52,7 @@ describe("EventTriggerExtractor", () => {
                 extractor: 'extractorId',
                 boxId: box.box_id().to_str(),
                 boxSerialized: Buffer.from(box.sigma_serialize_bytes()).toString("base64"),
-                blockId: 'hash',
+                block: 'hash',
                 height: 10,
                 toAddress: 'cardanoAddr2',
                 fromChain: sampleEventData[1],
@@ -77,6 +77,7 @@ describe("EventTriggerExtractor", () => {
          * Expected: processTransactions should returns true and database row count should be 2
          */
         it('should save 2 eventTrigger successfully out of 5 transaction', async () => {
+            const dataSource = await loadDataBase("eventTriggerExtractor");
             const repository1 = dataSource.getRepository(EventTriggerEntity);
             const [, rowsCount1] = await repository1.findAndCount();
             expect(rowsCount1).toBe(0);
