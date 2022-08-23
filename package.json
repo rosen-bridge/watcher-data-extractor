@@ -1,5 +1,5 @@
 {
-  "name": "rosen-commitment-extractor",
+  "name": "@rosen-bridge/watcher-data-extractor",
   "version": "0.1.0",
   "description": "Extractor for rosen specific boxes on ergo blockchain",
   "author": "Sahand Zoufan",
