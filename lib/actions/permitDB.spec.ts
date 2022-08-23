@@ -249,7 +249,7 @@ describe("PermitEntityAction", () => {
             expect(res).toEqual(true);
             const repository = dataSource.getRepository(PermitEntity);
             expect((await repository.findBy({spendBlock: 'hash'})).length).toEqual(0);
-            await permitEntity.spendPermits(['1', 'boxId10'], block);
+            await permitEntity.spendPermits(['1', 'boxId10'], block, 'extractor1');
             expect((await repository.findBy({boxId: '1', spendBlock: 'hash'})).length).toEqual(1);
         })
     })

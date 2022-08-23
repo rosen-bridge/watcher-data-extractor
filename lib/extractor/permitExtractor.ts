@@ -64,7 +64,7 @@ class PermitExtractor extends AbstractExtractor<wasm.Transaction>{
                 });
 
                 this.actions.storePermits(boxes, block, this.getId()).then(() => {
-                    this.actions.spendPermits(spendIds, block).then(() => {
+                    this.actions.spendPermits(spendIds, block, this.getId()).then(() => {
                         resolve(true);
                     })
                 }).catch((e) => {

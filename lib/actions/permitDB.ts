@@ -70,14 +70,15 @@ class PermitEntityAction{
      * update spendBlock Column of the permits in the dataBase
      * @param spendId
      * @param block
+     * @param extractor
      */
-    spendPermits = async (spendId: Array<string>, block: BlockEntity): Promise<void> => {
+    spendPermits = async (spendId: Array<string>, block: BlockEntity, extractor: string): Promise<void> => {
         //todo: should change with single db call
         for (const id of spendId) {
             await this.datasource.createQueryBuilder()
                 .update(PermitEntity)
                 .set({spendBlock: block.hash, spendHeight: block.height})
-                .where("boxId = :id", {id: id})
+                .where("boxId = :id AND extractor = :extractor", {id: id, extractor: extractor})
                 .execute()
         }
     }
