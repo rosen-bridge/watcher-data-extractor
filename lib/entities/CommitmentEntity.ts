@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
+@Unique(["boxId", "extractor"])
 class CommitmentEntity{
     @PrimaryGeneratedColumn()
     id: number;
@@ -18,10 +19,10 @@ class CommitmentEntity{
     WID: string;
 
     @Column()
-    commitmentBoxId: string;
+    boxId: string;
 
     @Column()
-    blockId: string;
+    block: string;
 
     @Column()
     height: number
@@ -30,10 +31,10 @@ class CommitmentEntity{
     boxSerialized: string;
 
     @Column({nullable: true})
-    spendBlockHash!: string;
+    spendBlock!: string;
 
     @Column({nullable: true})
-    spendBlockHeight?: number;
+    spendHeight?: number;
 }
 
 export default CommitmentEntity;
