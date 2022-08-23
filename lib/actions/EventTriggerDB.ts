@@ -1,51 +1,73 @@
-import { DataSource } from "typeorm";
+import { DataSource, In, Repository } from "typeorm";
 import EventTriggerEntity from "../entities/EventTriggerEntity";
 import { BlockEntity } from "@rosen-bridge/scanner";
 import { ExtractedEventTrigger } from "../interfaces/extractedEventTrigger";
 
 class EventTriggerDB{
     private readonly datasource: DataSource;
+    private readonly triggerEventRepository: Repository<EventTriggerEntity>;
 
     constructor(dataSource: DataSource) {
         this.datasource = dataSource;
+        this.triggerEventRepository = dataSource.getRepository(EventTriggerEntity);
     }
 
     /**
-     * It stores list of wids in the dataSource with block id
-     * @param wids
+     * It stores list of eventTriggers in the dataSource with block id
+     * @param eventTriggers
      * @param block
      * @param extractor
      */
-    storeEventTriggers = async (wids: Array<ExtractedEventTrigger>, block: BlockEntity, extractor: string) => {
-        const widEntity = wids.map((event) => {
-            const row = new EventTriggerEntity();
-            row.boxId = event.boxId;
-            row.boxSerialized = event.boxSerialized;
-            row.blockId = block.hash;
-            row.height = block.height;
-            row.extractor = extractor;
-            row.WIDs = event.WIDs;
-            row.amount = event.amount;
-            row.bridgeFee = event.bridgeFee;
-            row.fromAddress = event.fromAddress;
-            row.toAddress = event.toAddress;
-            row.fromChain = event.fromChain;
-            row.networkFee = event.networkFee;
-            row.sourceChainTokenId = event.sourceChainTokenId;
-            row.targetChainTokenId = event.targetChainTokenId;
-            row.sourceBlockId = event.sourceBlockId;
-            row.toChain = event.toChain;
-            row.sourceTxId = event.sourceTxId;
-            return row;
-        });
+    storeEventTriggers = async (eventTriggers: Array<ExtractedEventTrigger>, block: BlockEntity, extractor: string) => {
+        if (eventTriggers.length === 0) return true
+        const boxIds = eventTriggers.map(trigger => trigger.boxId);
+        const savedTriggers = await this.triggerEventRepository.findBy({
+            boxId: In(boxIds),
+            extractor: extractor,
+        })
         let success = true;
         const queryRunner = this.datasource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            await queryRunner.manager.save(widEntity);
+            for (const event of eventTriggers) {
+                const saved = savedTriggers.some((entity) => {
+                    return entity.boxId === event.boxId
+                });
+                const entity = {
+                    boxId: event.boxId,
+                    boxSerialized: event.boxSerialized,
+                    block: block.hash,
+                    height: block.height,
+                    extractor: extractor,
+                    WIDs: event.WIDs,
+                    amount: event.amount,
+                    bridgeFee: event.bridgeFee,
+                    fromAddress: event.fromAddress,
+                    toAddress: event.toAddress,
+                    fromChain: event.fromChain,
+                    networkFee: event.networkFee,
+                    sourceChainTokenId: event.sourceChainTokenId,
+                    targetChainTokenId: event.targetChainTokenId,
+                    sourceBlockId: event.sourceBlockId,
+                    toChain: event.toChain,
+                    sourceTxId: event.sourceTxId,
+                }
+                if (!saved) {
+                    await queryRunner.manager.insert(EventTriggerEntity, entity);
+                } else {
+                    await queryRunner.manager.update(
+                        EventTriggerEntity,
+                        {
+                            boxId: event.boxId
+                        },
+                        entity
+                    )
+                }
+            }
             await queryRunner.commitTransaction();
         } catch (e) {
+            console.log(`An error occurred during store eventTrigger action: ${e}`)
             await queryRunner.rollbackTransaction();
             success = false;
         } finally {
@@ -63,7 +85,7 @@ class EventTriggerDB{
         await this.datasource.createQueryBuilder()
             .delete()
             .from(EventTriggerEntity)
-            .where("extractor = :extractor AND blockId = :block", {
+            .where("extractor = :extractor AND block = :block", {
                 "block": block,
                 "extractor": extractor
             }).execute()

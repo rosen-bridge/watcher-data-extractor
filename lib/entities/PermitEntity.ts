@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
+@Unique(["boxId", "extractor"])
 class PermitEntity{
     @PrimaryGeneratedColumn()
     id: number
@@ -18,16 +19,16 @@ class PermitEntity{
     WID: string
 
     @Column()
-    blockId: string
+    block: string
 
     @Column()
     height: number
 
     @Column({nullable: true})
-    spendBlockHash!: string;
+    spendBlock!: string;
 
     @Column({nullable: true})
-    spendBlockHeight?: number;
+    spendHeight?: number;
 }
 
 export default PermitEntity;

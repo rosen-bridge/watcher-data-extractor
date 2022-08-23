@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
+@Unique(["boxId", "extractor"])
 class EventTriggerEntity{
     @PrimaryGeneratedColumn()
     id: number
@@ -15,7 +16,7 @@ class EventTriggerEntity{
     boxSerialized: string
 
     @Column()
-    blockId: string
+    block: string
 
     @Column()
     height: number
