@@ -17,12 +17,12 @@ Data extractors are modules that are integrated within a scanner. They drive the
  
  
 ## Related Projects
-This module is used within the [Scanner](https://github.com/rosen-bridge/scanner) project. As stated above, this module is used in the [Watcher](https://github.com/rosen-bridge/watcher) service to drive the related boxes. It alse used in the [Guard](https://github.com/rosen-bridge/watcher) to track the created event triggers.
+This module is used within the [Scanner](https://github.com/rosen-bridge/scanner) project. As stated above, this module is used in the [Watcher](https://github.com/rosen-bridge/watcher) service to drive the related boxes. It also used in the [Guard](https://github.com/rosen-bridge/watcher) to track the created event triggers.
 
 
 ## How to Use the Watcher Data Extractor
 ### Install
-This project is written in node-js using Esnext module and typeorm database. This project is not dependent and is used as the scanner module. You can easily install it using npm with the command:
+This project is written in node-js using Esnext module and typeorm database. Extractors are not standalone projects and should be used as scanner modules. You can easily install it using npm with the command:
  
 ```shell
 npm install @rosen-bridge/watcher-data-extractor
@@ -35,7 +35,7 @@ npm run build
 ```
  
 ### Usage
-In the first step, you need to create a scanner instance; follow the steps [here](https://github.com/rosen-bridge/scanner) to create a running instance of the scanner. Then you need to instantiate your needed extractors and register it to your ergo scanner:
+In the first step, you need to create a scanner instance; follow the steps [here](https://github.com/rosen-bridge/scanner) to create a running instance of the scanner. Then, you need to instantiate your desired extractors and register them to your ergo scanner:
 ```javascript
 const commitmentExtractor = new CommitmentExtractor(
     <extractor_name>, 
